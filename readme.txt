@@ -1,10 +1,10 @@
 === Plugin Name ===
-Contributors: markjaquith, mdawaffe
-Donate link: http://example.com/
-Tags: comments, spam
+Contributors: hbeberoglu
+Donate link: http://nxsn.com/wp-favorite-posts
+Tags: favorite, posts, wp-favorite-posts
 Requires at least: 2.0.2
 Tested up to: 2.1
-Stable tag: 4.3
+Stable tag: 0.1
 
 Here is a short description of the plugin.  This should be no more than 150 chars.  No markup here.
 
@@ -37,29 +37,10 @@ you put the stable version, in order to eliminate any doubt.
 
 == Installation ==
 
-This section describes how to install the plugin and get it working.
-
-e.g.
-
-1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
+1. Unzip into your `/wp-content/plugins/` directory.
 1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
-
-== Frequently Asked Questions ==
-
-= A question that someone might have =
-
-An answer to that question.
-
-= What about foo bar? =
-
-Answer to foo bar dilemma.
-
-== Screenshots ==
-
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the directory of the stable readme.txt, so in this case, `/tags/4.3/screenshot-1.png` (or jpg, jpeg, gif)
-2. This is the second screen shot
+1. Place `<?php wpfp_link(); ?>` in your single.php template
+file.
 
 == Arbitrary section ==
 
