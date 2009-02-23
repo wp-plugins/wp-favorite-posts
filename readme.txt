@@ -1,7 +1,7 @@
 === WP Favorite Posts ===
 Contributors: hbeberoglu
 Donate link: http://nxsn.com/wp-favorite-posts
-Tags: favorite, posts, wp-favorite-posts
+Tags: favorite, posts, favorites, cookie, wp-favorite-posts
 Requires at least: 2.0.2
 Tested up to: 2.7.1
 Stable tag: 1.0
