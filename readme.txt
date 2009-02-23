@@ -1,6 +1,6 @@
 === WP Favorite Posts ===
-Contributors: hbeberoglu
-Donate link: http://nxsn.com/wp-favorite-posts
+Contributors: Hüseyin Berberoğlu
+Donate link: http://birazkisisel.com
 Tags: favorite, posts, favorites, cookie, wp-favorite-posts
 Requires at least: 2.0.2
 Tested up to: 2.7.1
