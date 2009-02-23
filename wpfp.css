@@ -1,0 +1,7 @@
+.wpfp-hideloading {
+	display: none;
+}
+#wpfp-loading {
+	border: 0;
+	vertical-align: bottom;
+}
