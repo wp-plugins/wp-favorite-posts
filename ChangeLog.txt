@@ -1,0 +1,9 @@
+------------------
+WP Favorite Posts - ChangeLog
+http://wordpress.org/extend/plugins/wp-favorite-posts/
+------------------
+
+Version 1.0
+-----------
+2009-02-23 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* First Release of WP-Favorite Posts
