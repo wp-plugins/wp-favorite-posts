@@ -14,6 +14,8 @@ unregistered users can favorite a post. There is no register requirement.
 Allows users to add favorite posts. This plugin use cookies for saving data so
 unregistered users can favorite a post. There is no register requirement.
 
+Only works with which wordpress uses permalinks.
+
 == Installation ==
 
 1. Unzip into your `/wp-content/plugins/` directory.
