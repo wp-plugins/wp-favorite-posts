@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== WP Favorite Posts ===
 Contributors: hbeberoglu
 Donate link: http://nxsn.com/wp-favorite-posts
 Tags: favorite, posts, wp-favorite-posts
