@@ -16,6 +16,9 @@ unregistered users can favorite a post. There is no register requirement.
 
 Only works with which wordpress uses permalinks.
 
+See [ChangeLog](http://svn.wp-plugins.org/wp-favorite-posts/trunk/ChangeLog.txt
+"ChangeLog.txt") for learn what's different between versions.
+
 == Installation ==
 
 1. Unzip into your `/wp-content/plugins/` directory.
