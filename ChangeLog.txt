@@ -2,6 +2,12 @@
 WP Favorite Posts - ChangeLog
 http://wordpress.org/extend/plugins/wp-favorite-posts/
 ------------------
+Version 1.1.3
+-----------
+2009-02-24 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Clear Favorites now works.
+	* Favorite list is xhtml valid now.
+
 Version 1.1.2
 -----------
 2009-02-24 Hüseyin Berberoğlu <hberberoglu@gmail.com>
