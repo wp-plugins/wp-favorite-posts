@@ -49,7 +49,7 @@ $wpfp_options = get_option('wpfp_options');
 		<th><?php _e("Text for favorites saved to cookies", "wp-favorite-posts") ?></th><td><textarea name="cookie_warning"><?php echo stripslashes($wpfp_options['cookie_warning']); ?></textarea></td>
 	</tr>
 	<tr>
-		<th></th><td><input type="submit" name="submit" class="button" value="<?php e_("Save Changes", "wp-favorite-posts") ?>" /></td>
+		<th></th><td><input type="submit" name="submit" class="button" value="<?php _e("Save Changes", "wp-favorite-posts") ?>" /></td>
 	</tr>
 </table>
 </form>
