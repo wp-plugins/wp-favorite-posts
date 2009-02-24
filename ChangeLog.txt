@@ -2,6 +2,11 @@
 WP Favorite Posts - ChangeLog
 http://wordpress.org/extend/plugins/wp-favorite-posts/
 ------------------
+Version 1.1.2
+-----------
+2009-02-24 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Save button fixed which in options page.
+
 Version 1.1.1
 -----------
 2009-02-24 Hüseyin Berberoğlu <hberberoglu@gmail.com>
