@@ -15,7 +15,7 @@ Allows users to add favorite posts. This plugin use cookies for saving data so
 unregistered users can favorite a post. There is no register requirement.
 
 See [ChangeLog](http://svn.wp-plugins.org/wp-favorite-posts/trunk/ChangeLog.txt
-"ChangeLog.txt") for learn what's different between versions.
+"ChangeLog.txt") to learn what's different between versions.
 
 == Installation ==
 
