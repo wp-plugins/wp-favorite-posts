@@ -6,8 +6,8 @@ Requires at least: 2.0.2
 Tested up to: 2.7.1
 Stable tag: 1.1
 
-Allows users to add favorite posts. This plugin use cookies for saving data so
-unregistered users can favorite a post. There is no register requirement.
+Allows visitors to add favorite posts. This plugin use cookies for saving data so
+unregistered users can favorite a post.
 
 == Description ==
 
