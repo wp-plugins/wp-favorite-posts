@@ -4,17 +4,18 @@ Donate link: http://birazkisisel.com/projects/wp-favorite-posts
 Tags: favorite, posts, favorites, cookie, wp-favorite-posts
 Requires at least: 2.0.2
 Tested up to: 2.7.1
-Stable tag: 1.0
+Stable tag: 1.1.1
 
-Allows users to add favorite posts. This plugin use cookies for saving data so
-unregistered users can favorite a post. There is no register requirement.
+Allows visitors to add favorite posts. This plugin use cookies for saving data so
+unregistered users can favorite a post.
 
 == Description ==
 
 Allows users to add favorite posts. This plugin use cookies for saving data so
 unregistered users can favorite a post. There is no register requirement.
 
-Only works with which wordpress uses permalinks.
+See [ChangeLog](http://svn.wp-plugins.org/wp-favorite-posts/trunk/ChangeLog.txt
+"ChangeLog.txt") to learn what's different between versions.
 
 == Installation ==
 
