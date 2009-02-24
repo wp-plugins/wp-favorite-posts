@@ -3,6 +3,11 @@ WP Favorite Posts - ChangeLog
 http://wordpress.org/extend/plugins/wp-favorite-posts/
 ------------------
 
+Version 1.1
+-----------
+2009-02-24 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Fixed permalink problem. Now works with all types of permalink.
+
 Version 1.0
 -----------
 2009-02-23 Hüseyin Berberoğlu <hberberoglu@gmail.com>
