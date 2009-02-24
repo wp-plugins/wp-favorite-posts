@@ -54,10 +54,10 @@ function wpfp_link() {
     echo "<span id='wpfp-span'>";
     echo "<img id='wpfp-loading' src='".WPFP_PATH."/img/loading.gif' alt='Loading' title='Loading' class='wpfp-hideloading' />";
     $wpfp_options = get_option('wpfp_options');
-    if (check_favorite($post->post_name)):
-	echo "<a id='wpfp-link' href='?favorite=remove&post=". $post->post_title ."&url=" . $post->post_name ."' title='". $wpfp_options['remove_favorite'] ."'>". $wpfp_options['remove_favorite'] ."</a>";
+    if (check_favorite($post->ID)):
+        echo "<a id='wpfp-link' href='?favorite=remove&post=". $post->post_title ."&url=" . $post->ID ."' title='". $wpfp_options['remove_favorite'] ."'>". $wpfp_options['remove_favorite'] ."</a>";
     else:
-        echo "<a id='wpfp-link' href='?favorite=add&post=". $post->post_title ."&url=". $post->post_name . "' title='". $wpfp_options['add_favorite'] ."'>". $wpfp_options['add_favorite'] ."</a>";
+        echo "<a id='wpfp-link' href='?favorite=add&post=". $post->post_title ."&url=". $post->ID . "' title='". $wpfp_options['add_favorite'] ."'>". $wpfp_options['add_favorite'] ."</a>";
     endif;
     echo "</span>";
 }
@@ -86,7 +86,7 @@ function list_favorite_posts($before = "<li>", $after = "</li>") {
     if (isset($_COOKIE['wp-favorite-posts'])):
         foreach ($_COOKIE['wp-favorite-posts'] as $url => $post_title) {
             echo $before;
-            echo "<a href='$url/'>" . $post_title . "</a> ";
+            echo "<a href='".get_bloginfo('url')."/?p=$url'>" . $post_title . "</a> ";
             echo $after;
         }
     else:
