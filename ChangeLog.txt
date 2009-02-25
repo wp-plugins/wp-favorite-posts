@@ -2,6 +2,12 @@
 WP Favorite Posts - ChangeLog
 http://wordpress.org/extend/plugins/wp-favorite-posts/
 ------------------
+
+Version 1.1.4
+-----------
+2009-02-24 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Use permalinks favorite links.
+
 Version 1.1.3
 -----------
 2009-02-24 Hüseyin Berberoğlu <hberberoglu@gmail.com>
