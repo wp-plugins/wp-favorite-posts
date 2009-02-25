@@ -14,6 +14,9 @@ unregistered users can favorite a post.
 Allows users to add favorite posts. This plugin use cookies for saving data so
 unregistered users can favorite a post. There is no register requirement.
 
+If you use WP Super Cache you must add page (which you show favorites) URI to "Accepted Filenames &
+Rejected URIs".
+
 See [ChangeLog](http://svn.wp-plugins.org/wp-favorite-posts/trunk/ChangeLog.txt
 "ChangeLog.txt") to learn what's different between versions.
 
