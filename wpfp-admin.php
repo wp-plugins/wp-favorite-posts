@@ -10,6 +10,7 @@ if ( isset($_POST['submit']) ) {
 	$wpfp_options['clear'] = addslashes($_POST['clear']);
 	$wpfp_options['cleared'] = addslashes($_POST['cleared']);
 	$wpfp_options['favorites_empty'] = addslashes($_POST['favorites_empty']);
+	$wpfp_options['rem'] = addslashes($_POST['rem']);
 	$wpfp_options['cookie_warning'] = addslashes($_POST['cookie_warning']);
 
 	update_option('wpfp_options', $wpfp_options);
@@ -43,7 +44,10 @@ $wpfp_options = get_option('wpfp_options');
 		<th><?php _e("Text for cleared", "wp-favorite-posts") ?></th><td><input type="text" name="cleared" value="<?php echo stripslashes($wpfp_options['cleared']); ?>" /></td>
 	</tr>
 	<tr>
-		<th><?php _e("Text for favorites are", "wp-favorite-posts") ?> empty</th><td><input type="text" name="favorites_empty" value="<?php echo stripslashes($wpfp_options['favorites_empty']); ?>" /></td>
+		<th><?php _e("Text for favorites are empty", "wp-favorite-posts") ?></th><td><input type="text" name="favorites_empty" value="<?php echo stripslashes($wpfp_options['favorites_empty']); ?>" /></td>
+	</tr>
+	<tr>
+		<th><?php _e("Text for [remove]", "wp-favorite-posts") ?></th><td><input type="text" name="rem" value="<?php echo stripslashes($wpfp_options['rem']); ?>" /></td>
 	</tr>
 	<tr>
 		<th><?php _e("Text for favorites saved to cookies", "wp-favorite-posts") ?></th><td><textarea name="cookie_warning" rows="2" cols="40"><?php echo stripslashes($wpfp_options['cookie_warning']); ?></textarea></td>

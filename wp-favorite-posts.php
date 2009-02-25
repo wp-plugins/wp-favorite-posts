@@ -57,12 +57,12 @@ function check_favorite($str) {
 function wpfp_link() {
     global $post;
     echo "<span id='wpfp-span'>";
-    echo "<img id='wpfp-loading' src='".WPFP_PATH."/img/loading.gif' alt='Loading' title='Loading' class='wpfp-hideloading' />";
+    loading_img();
     $wpfp_options = get_option('wpfp_options');
     if (check_favorite($post->ID)):
-        echo "<a id='wpfp-link' href='?favorite=remove&post=". $post->post_title ."&url=" . $post->ID ."' title='". $wpfp_options['remove_favorite'] ."'>". $wpfp_options['remove_favorite'] ."</a>";
+        echo "<a class='wpfp-link' href='?favorite=remove&post=". $post->post_title ."&url=" . $post->ID ."' title='". $wpfp_options['remove_favorite'] ."'>". $wpfp_options['remove_favorite'] ."</a>";
     else:
-        echo "<a id='wpfp-link' href='?favorite=add&post=". $post->post_title ."&url=". $post->ID . "' title='". $wpfp_options['add_favorite'] ."'>". $wpfp_options['add_favorite'] ."</a>";
+        echo "<a class='wpfp-link' href='?favorite=add&post=". $post->post_title ."&url=". $post->ID . "' title='". $wpfp_options['add_favorite'] ."'>". $wpfp_options['add_favorite'] ."</a>";
     endif;
     echo "</span>";
 }
@@ -93,7 +93,8 @@ function list_favorite_posts($before = "<li>", $after = "</li>") {
     if (isset($_COOKIE['wp-favorite-posts'])):
         foreach ($_COOKIE['wp-favorite-posts'] as $url => $post_title) {
             echo $before;
-            echo "<a href='".get_permalink($url)."'>" . $post_title . "</a> ";
+            echo "<a href='".get_permalink($url)."'>" . $post_title . "</a>";
+            echo "[<a class='wpfp-link' href='?favorite=remove&post=". $post_title ."&url=". $url ."' title='".$wpfp_options['rem']."'>".$wpfp_options['rem']."</a>]";
             echo $after;
         }
     else:
@@ -102,13 +103,14 @@ function list_favorite_posts($before = "<li>", $after = "</li>") {
         echo $after;
     endif;
     echo "</ul>";
-
-    echo "<img id='wpfp-loading' src='".WPFP_PATH."/img/loading.gif' alt='Loading' title='Loading' class='wpfp-hideloading' />";
-    echo "<a id='wpfp-link' href='?favorite=clear'>". $wpfp_options['clear'] . "</a>";
+    loading_img();
+    echo "<a class='wpfp-link' href='?favorite=clear'>". $wpfp_options['clear'] . "</a>";
     echo "</span>";
     echo "<p>".$wpfp_options['cookie_warning']."</p>";
 }
-
+function loading_img() {
+    echo "<img id='wpfp-loading' src='".WPFP_PATH."/img/loading.gif' alt='Loading' title='Loading' class='wpfp-hideloading' />";
+}
 function wpfp_content_filter($content) {
         if (strpos($content,'{{wp-favorite-posts}}')!== false) {
                 return str_replace('{{wp-favorite-posts}}', list_favorite_posts(), $content);
@@ -130,6 +132,7 @@ function wpfp_init() {
 	$wpfp_options['cleared'] = "<p>Favorites cleared!</p>";
 	$wpfp_options['favorites_empty'] = "Favorite list is empty.";
 	$wpfp_options['cookie_warning'] = "Your favorite posts saved to your browsers cookies. If you clear cookies also favorite posts will be deleted.";
+	$wpfp_options['rem'] = "remove";
 	add_option('wpfp_options', $wpfp_options, 'Favorite Posts Options');
 }
 add_action('activate_wp-favorite-posts/wp-favorite-posts.php', 'wpfp_init');
