@@ -1,6 +1,7 @@
 jQuery(document).ready( function($) {
   $(".wpfp-link").click( function() {
-    $(this).prepend($("wpfp-loading"));
+    dataBack = $(this).parent();
+    $(this).prepend($("#wpfp-loading"));
     $("#wpfp-loading").removeClass("wpfp-hideloading");
     $("#wpfp-loading").addClass("wpfp-showloading");
     url = document.location.href;
@@ -9,7 +10,7 @@ jQuery(document).ready( function($) {
     $.get(url, params, function(data) {
 	    $("#wpfp-loading").removeClass("wpfp-showloading");
 	    $("#wpfp-loading").addClass("wpfp-hideloading");
-            $("#wpfp-span").html(data);
+            dataBack.html(data);
         }
     );
     return false;
