@@ -24,7 +24,7 @@ See [ChangeLog](http://svn.wp-plugins.org/wp-favorite-posts/trunk/ChangeLog.txt
 
 1. Unzip into your `/wp-content/plugins/` directory.
 1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php wpfp_link(); ?>` in your single.php template
+1. Place `<?php if (function_exists('wpfp_link')) { wpfp_link(); } ?>` in your single.php template
 file. Then favorite this post link will appear in all posts.
 1. Create a page e.g. "Your Favorites" and insert `{{wp-favorite-posts}}`
 text into content section. This page will contain users favorite posts.
