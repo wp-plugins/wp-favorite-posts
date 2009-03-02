@@ -56,7 +56,7 @@ function check_favorite($str) {
 
 function wpfp_link() {
     global $post;
-    echo "<span id='wpfp-span'>";
+    echo "<span class='wpfp-span'>";
     loading_img();
     $wpfp_options = get_option('wpfp_options');
     if (check_favorite($post->ID)):
@@ -88,7 +88,7 @@ function add_js_script ( ) {
 
 function list_favorite_posts($before = "<li>", $after = "</li>") {
     $wpfp_options = get_option('wpfp_options');
-    echo "<span id='wpfp-span'>";
+    echo "<span class='wpfp-span'>";
     echo "<ul>";
     if (isset($_COOKIE['wp-favorite-posts'])):
         foreach ($_COOKIE['wp-favorite-posts'] as $url => $post_title) {
@@ -109,7 +109,7 @@ function list_favorite_posts($before = "<li>", $after = "</li>") {
     echo "<p>".$wpfp_options['cookie_warning']."</p>";
 }
 function loading_img() {
-    echo "<img id='wpfp-loading' src='".WPFP_PATH."/img/loading.gif' alt='Loading' title='Loading' class='wpfp-hideloading' />";
+    echo "<img src='".WPFP_PATH."/img/loading.gif' alt='Loading' title='Loading' class='wpfp-hideloading wpfp-loading' />";
 }
 function wpfp_content_filter($content) {
         if (strpos($content,'{{wp-favorite-posts}}')!== false) {
