@@ -60,9 +60,9 @@ function wpfp_link() {
     loading_img();
     $wpfp_options = get_option('wpfp_options');
     if (check_favorite($post->ID)):
-        echo "<a class='wpfp-link' href='?favorite=remove&post=". $post->post_title ."&url=" . $post->ID ."' title='". $wpfp_options['remove_favorite'] ."'>". $wpfp_options['remove_favorite'] ."</a>";
+        echo "<a class='wpfp-link' href='?favorite=remove&amp;post=". $post->post_title ."&amp;url=" . $post->ID ."' title='". $wpfp_options['remove_favorite'] ."'>". $wpfp_options['remove_favorite'] ."</a>";
     else:
-        echo "<a class='wpfp-link' href='?favorite=add&post=". $post->post_title ."&url=". $post->ID . "' title='". $wpfp_options['add_favorite'] ."'>". $wpfp_options['add_favorite'] ."</a>";
+        echo "<a class='wpfp-link' href='?favorite=add&amp;post=". $post->post_title ."&amp;url=". $post->ID . "' title='". $wpfp_options['add_favorite'] ."'>". $wpfp_options['add_favorite'] ."</a>";
     endif;
     echo "</span>";
 }
@@ -94,7 +94,7 @@ function list_favorite_posts($before = "<li>", $after = "</li>") {
         foreach ($_COOKIE['wp-favorite-posts'] as $url => $post_title) {
             echo $before;
             echo "<a href='".get_permalink($url)."'>" . $post_title . "</a> ";
-            echo "[<a class='wpfp-link' href='?favorite=remove&post=". $post_title ."&url=". $url ."' title='".$wpfp_options['rem']."'>".$wpfp_options['rem']."</a>]";
+            echo "[<a class='wpfp-link' href='?favorite=remove&amp;post=". $post_title ."&amp;url=". $url ."' title='".$wpfp_options['rem']."'>".$wpfp_options['rem']."</a>]";
             echo $after;
         }
     else:
