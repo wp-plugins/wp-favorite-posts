@@ -110,9 +110,11 @@ function wp_favorite_posts() {
 add_action('template_redirect', 'wp_favorite_posts');
 
 function wpfp_content_filter($content) {
-    if (strpos($content,'{{wp-favorite-posts}}')!== false) {
-        return str_replace('{{wp-favorite-posts}}', wpfp_list_favorite_posts(), $content);
-    }
+    if (is_page()):
+        if (strpos($content,'{{wp-favorite-posts}}')!== false) {
+            return str_replace('{{wp-favorite-posts}}', wpfp_list_favorite_posts(), $content);
+        }
+    endif;
     return $content;
 }
 add_filter('the_content','wpfp_content_filter',7);
