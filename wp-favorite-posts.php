@@ -3,7 +3,7 @@
 Plugin Name: WP Favorite Posts
 Plugin URI: http://birazkisisel.com/projects/wp-favorite-posts/
 Description: Allows users to add favorite posts. This plugin use cookies for saving data so unregistered users can favorite a post. Put <code>&lt;?php wpfp_link(); ?&gt;</code> where ever you want on a single post. Then create a page which includes that text : <code>{{wp-favorite-posts}}</code> That's it!
-Version: 1.1.4
+Version: 1.1.5
 Author: Hüseyin Berberoğlu
 Author URI: http://birazkisisel.com
 
@@ -89,60 +89,60 @@ function wpfp_loading_img() {
 
 function wp_favorite_posts() {
     $wpfp_options = get_option('wpfp_options');
-    
+
     if ($_REQUEST['wpfpaction'] == 'add') {
         $a = wpfp_set_cookie($_REQUEST['postid'], "added");
         if ($a) die($wpfp_options['added']);
-	
+
     } else if ($_REQUEST['wpfpaction'] == 'remove') {
         $a = wpfp_set_cookie($_REQUEST['postid'], "");
         if ($a) die($wpfp_options['removed']);
-	
+
     } else if ($_REQUEST['wpfpaction'] == 'clear') {
         if (isset($_COOKIE['wp-favorite-posts'])):
             foreach ($_COOKIE['wp-favorite-posts'] as $post_id => $val) {
                 wpfp_set_cookie($post_id, "");
             }
-	endif;
+        endif;
         die($wpfp_options['cleared']);
     }
 }
 add_action('template_redirect', 'wp_favorite_posts');
 
 function wpfp_content_filter($content) {
-        if (strpos($content,'{{wp-favorite-posts}}')!== false) {
-                return str_replace('{{wp-favorite-posts}}', wpfp_list_favorite_posts(), $content);
-        }
-	return $content;
+    if (strpos($content,'{{wp-favorite-posts}}')!== false) {
+        return str_replace('{{wp-favorite-posts}}', wpfp_list_favorite_posts(), $content);
+    }
+    return $content;
 }
 add_filter('the_content','wpfp_content_filter',7);
 
 function wpfp_add_js_script ( ) {
-	echo '<link type="text/css" rel="stylesheet" href="' . WPFP_PATH . '/wpfp.css" />' . "\n";
-	wp_enqueue_script( "wp-favroite-posts", WPFP_PATH . "/ajax.js", array( 'jquery' ) );
+    echo '<link type="text/css" rel="stylesheet" href="' . WPFP_PATH . '/wpfp.css" />' . "\n";
+    wp_enqueue_script( "wp-favroite-posts", WPFP_PATH . "/ajax.js", array( 'jquery' ) );
 }
 add_action('wp_print_scripts', 'wpfp_add_js_script');
 
 function wpfp_init() {
-	$wpfp_options = array();
-	$wpfp_options['add_favorite'] = "Add to favorites";
-	$wpfp_options['added'] = "Added to favorites!";
-	$wpfp_options['remove_favorite'] = "Remove from favorites";
-	$wpfp_options['removed'] = "Removed from favorites!";
-	$wpfp_options['clear'] = "Clear favorites";
-	$wpfp_options['cleared'] = "<p>Favorites cleared!</p>";
-	$wpfp_options['favorites_empty'] = "Favorite list is empty.";
-	$wpfp_options['cookie_warning'] = "Your favorite posts saved to your browsers cookies. If you clear cookies also favorite posts will be deleted.";
-	$wpfp_options['rem'] = "remove";
-	add_option('wpfp_options', $wpfp_options, 'Favorite Posts Options');
+    $wpfp_options = array();
+    $wpfp_options['add_favorite'] = "Add to favorites";
+    $wpfp_options['added'] = "Added to favorites!";
+    $wpfp_options['remove_favorite'] = "Remove from favorites";
+    $wpfp_options['removed'] = "Removed from favorites!";
+    $wpfp_options['clear'] = "Clear favorites";
+    $wpfp_options['cleared'] = "<p>Favorites cleared!</p>";
+    $wpfp_options['favorites_empty'] = "Favorite list is empty.";
+    $wpfp_options['cookie_warning'] = "Your favorite posts saved to your browsers cookies. If you clear cookies also favorite posts will be deleted.";
+    $wpfp_options['rem'] = "remove";
+    add_option('wpfp_options', $wpfp_options, 'Favorite Posts Options');
 }
 add_action('activate_wp-favorite-posts/wp-favorite-posts.php', 'wpfp_init');
 
 function wpfp_config() { include('wpfp-admin.php'); }
 
 function wpfp_config_page() {
-	if ( function_exists('add_submenu_page') )
-		add_submenu_page('plugins.php', __('Favorite Posts'), __('Favorite Posts'), 'manage_options', 'wp-favorite-posts', 'wpfp_config');
+    if ( function_exists('add_submenu_page') )
+        add_submenu_page('plugins.php', __('Favorite Posts'), __('Favorite Posts'), 'manage_options', 'wp-favorite-posts', 'wpfp_config');
 }
 add_action('admin_menu', 'wpfp_config_page');
 
