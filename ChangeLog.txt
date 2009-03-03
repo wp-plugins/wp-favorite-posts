@@ -5,6 +5,10 @@ http://wordpress.org/extend/plugins/wp-favorite-posts/
 Version 1.1.5
 -----------
 2009-03-02 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Added rel="nofollow" to links.
+	* Favorite posts title language problem solved.
+
+2009-03-02 Hüseyin Berberoğlu <hberberoglu@gmail.com>
 	* Use XHTML valid links.
 	* Use class instead of id for html elements.
 	* Use more unique function names. All functions starts with wpfp.
