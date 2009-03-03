@@ -73,8 +73,9 @@ function wpfp_list_favorite_posts($before = "<li>", $after = "</li>") {
     echo "<ul>";
     if (isset($_COOKIE['wp-favorite-posts'])):
         foreach ($_COOKIE['wp-favorite-posts'] as $url => $post_title) {
+            $p = get_post($url);
             echo $before;
-            echo "<a href='".get_permalink($url)."'>" . $post_title . "</a> ";
+            echo "<a href='".get_permalink($url)."'>" . $p->post_title . "</a> ";
             echo "[<a class='wpfp-link' href='?favorite=remove&amp;post=". $post_title ."&amp;url=". $url ."' title='".$wpfp_options['rem']."'>".$wpfp_options['rem']."</a>]";
             echo $after;
         }
