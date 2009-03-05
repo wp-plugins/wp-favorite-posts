@@ -121,7 +121,7 @@ add_filter('the_content','wpfp_content_filter',7);
 
 function wpfp_add_js_script ( ) {
     echo '<link type="text/css" rel="stylesheet" href="' . WPFP_PATH . '/wpfp.css" />' . "\n";
-    wp_enqueue_script( "wp-favroite-posts", WPFP_PATH . "/ajax.js", array( 'jquery' ) );
+    wp_enqueue_script( "wp-favroite-posts", WPFP_PATH . "/wpfp.js", array( 'jquery' ) );
 }
 add_action('wp_print_scripts', 'wpfp_add_js_script');
 
