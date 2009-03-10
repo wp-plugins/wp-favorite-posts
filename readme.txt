@@ -4,7 +4,7 @@ Donate link: http://birazkisisel.com/projects/wp-favorite-posts
 Tags: favorite, posts, favorites, cookie, wp-favorite-posts
 Requires at least: 2.0.2
 Tested up to: 2.7.1
-Stable tag: 1.1.6
+Stable tag: 1.1.7
 
 Allows visitors to add favorite posts. This plugin use cookies for saving data so
 unregistered users can favorite a post.
@@ -24,8 +24,11 @@ See [ChangeLog](http://svn.wp-plugins.org/wp-favorite-posts/trunk/ChangeLog.txt
 
 1. Unzip into your `/wp-content/plugins/` directory.
 1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php if (function_exists('wpfp_link')) { wpfp_link(); } ?>` in your single.php template
-file. Then favorite this post link will appear in all posts.
+1. Place `<?php if (function_exists('wpfp_link')) { wpfp_link(); } ?>` in your
+single.php or page.php template file. Then favorite this post link will appear in all posts.
+1. OR if you DO NOT want the favorite link to appear in every post/page, DO NOT
+use the code above. Just type in [wpfp-link] into the selected post/page
+content and it will embed the print link into that post/page only.
 1. Create a page e.g. "Your Favorites" and insert `{{wp-favorite-posts}}`
 text into content section. This page will contain users favorite posts.
 1. That's it :)
