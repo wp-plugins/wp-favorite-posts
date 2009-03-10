@@ -3,7 +3,7 @@ WP Favorite Posts - ChangeLog
 http://wordpress.org/extend/plugins/wp-favorite-posts/
 ------------------
 
-Version 1.1.6
+Version 1.1.7
 -----------
 2009-03-10 Hüseyin Berberoğlu <hberberoglu@gmail.com>
 	* Fixed duplicate loading image problem
