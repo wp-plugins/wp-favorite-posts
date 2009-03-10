@@ -5,6 +5,14 @@ http://wordpress.org/extend/plugins/wp-favorite-posts/
 
 Version 1.1.6
 -----------
+2009-03-10 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Fixed duplicate loading image problem
+	* Added [wpfp-link] feature;
+		You can show favorite link only in preferred posts with writing
+		[wpfp-link] to the post content.
+
+Version 1.1.6
+-----------
 2009-03-05 Hüseyin Berberoğlu <hberberoglu@gmail.com>
 	* Fixed ajax problem.
 
