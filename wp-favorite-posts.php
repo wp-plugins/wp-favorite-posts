@@ -46,17 +46,18 @@ function wpfp_check_favorite($cid) {
     return false;
 }
 
-function wpfp_link() {
+function wpfp_link($return = 0) {
     global $post;
-    echo "<span class='wpfp-span'>";
-    wpfp_loading_img();
+    $str = "<span class='wpfp-span'>";
+    $str .= wpfp_loading_img();
     $wpfp_options = get_option('wpfp_options');
     if (wpfp_check_favorite($post->ID)):
-        echo "<a class='wpfp-link' href='?wpfpaction=remove&amp;postid=" . $post->ID ."' title='". $wpfp_options['remove_favorite'] ."' rel='nofollow'>". $wpfp_options['remove_favorite'] ."</a>";
+        $str .= "<a class='wpfp-link' href='?wpfpaction=remove&amp;postid=" . $post->ID ."' title='". $wpfp_options['remove_favorite'] ."' rel='nofollow'>". $wpfp_options['remove_favorite'] ."</a>";
     else:
-        echo "<a class='wpfp-link' href='?wpfpaction=add&amp;postid=". $post->ID . "' title='". $wpfp_options['add_favorite'] ."' rel='nofollow'>". $wpfp_options['add_favorite'] ."</a>";
+        $str .= "<a class='wpfp-link' href='?wpfpaction=add&amp;postid=". $post->ID . "' title='". $wpfp_options['add_favorite'] ."' rel='nofollow'>". $wpfp_options['add_favorite'] ."</a>";
     endif;
-    echo "</span>";
+    $str .= "</span>";
+    if ($return) { return $str; } else { echo $str; }
 }
 
 function wpfp_list_favorite_posts($before = "<li>", $after = "</li>") {
@@ -77,14 +78,14 @@ function wpfp_list_favorite_posts($before = "<li>", $after = "</li>") {
         echo $after;
     endif;
     echo "</ul>";
-    wpfp_loading_img();
+    echo wpfp_loading_img();
     echo "<a class='wpfp-link' href='?wpfpaction=clear' rel='nofollow'>". $wpfp_options['clear'] . "</a>";
     echo "</span>";
     echo "<p>".$wpfp_options['cookie_warning']."</p>";
 }
 
 function wpfp_loading_img() {
-    echo "<img src='".WPFP_PATH."/img/loading.gif' alt='Loading' title='Loading' class='wpfp-hideloading wpfp-loading' />";
+    return "<img src='".WPFP_PATH."/img/loading.gif' alt='Loading' title='Loading' class='wpfp-hideloading wpfp-loading' />";
 }
 
 function wp_favorite_posts() {
@@ -115,6 +116,11 @@ function wpfp_content_filter($content) {
             return str_replace('{{wp-favorite-posts}}', wpfp_list_favorite_posts(), $content);
         }
     endif;
+    #if (is_single()):
+        if (strpos($content,'[wpfp-link]')!== false) {
+            return str_replace('[wpfp-link]', wpfp_link(1), $content);
+        }
+    #endif;
     return $content;
 }
 add_filter('the_content','wpfp_content_filter',7);
