@@ -70,10 +70,23 @@ function wpfp_link($return = 0) {
 
 function wpfp_list_favorite_posts($before = "<li>", $after = "</li>") {
     $wpfp_options = get_option('wpfp_options');
-    echo "<span class='wpfp-span'>";
-    echo "<ul>";
+    $favorite_post_ids = array();
+
+    # collect favorites from cookie and if user is logged in from database.
+    if (is_user_logged_in()):
+        $favorite_post_ids = get_usermeta(wpfp_get_current_user_id(),'wpfp_favorites');
+    endif;
+
     if (isset($_COOKIE['wp-favorite-posts'])):
         foreach ($_COOKIE['wp-favorite-posts'] as $post_id => $post_title) {
+            array_push($favorite_post_ids, $post_id);
+        }
+    endif;
+    # list favorites
+    echo "<span class='wpfp-span'>";
+    echo "<ul>";
+    if ($favorite_post_ids):
+        foreach ($favorite_post_ids as $post_id) {
             $p = get_post($post_id);
             echo $before;
             echo "<a href='".get_permalink($post_id)."' title='". $p->post_title ."'>" . $p->post_title . "</a> ";
@@ -86,10 +99,6 @@ function wpfp_list_favorite_posts($before = "<li>", $after = "</li>") {
         echo $after;
     endif;
     echo "</ul>";
-    if (is_user_logged_in()):
-        $wpfp_favorites = get_usermeta(wpfp_get_current_user_id(),'wpfp_favorites');
-        print_r($wpfp_favorites);
-    endif;
     echo wpfp_loading_img();
     echo "<a class='wpfp-link' href='?wpfpaction=clear' rel='nofollow'>". $wpfp_options['clear'] . "</a>";
     echo "</span>";
