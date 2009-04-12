@@ -35,15 +35,15 @@ function wpfp_set_cookie($post_id, $str) {
     return setcookie("wp-favorite-posts[$post_id]", $str, $expire, "/");
 }
 
-function wpfp_update_usermeta($post_id) {
+function wpfp_add_to_usermeta($post_id) {
     $wpfp_favorites = array();
-    $wpfp_favorites = get_usermeta(wpfp_get_current_user_id(),'wpfp_favorites');
+    $wpfp_favorites = wpfp_get_user_meta();
     $wpfp_favorites[] = $post_id;
-    update_usermeta(wpfp_get_current_user_id(),'wpfp_favorites',$wpfp_favorites);
+    wpfp_update_user_meta($wpfp_favorites);
     return true;
 }
 
-function wpfp_check_favorite($cid) {
+function wpfp_check_cookie($cid) {
     if (isset($_COOKIE['wp-favorite-posts'])):
         foreach ($_COOKIE['wp-favorite-posts'] as $post_id => $val) {
             if ($post_id == $cid) {
@@ -59,7 +59,7 @@ function wpfp_link($return = 0) {
     $str = "<span class='wpfp-span'>";
     $str .= wpfp_loading_img();
     $wpfp_options = get_option('wpfp_options');
-    if (wpfp_check_favorite($post->ID)):
+    if (wpfp_check_cookie($post->ID)):
         $str .= "<a class='wpfp-link' href='?wpfpaction=remove&amp;postid=" . $post->ID ."' title='". $wpfp_options['remove_favorite'] ."' rel='nofollow'>". $wpfp_options['remove_favorite'] ."</a>";
     else:
         $str .= "<a class='wpfp-link' href='?wpfpaction=add&amp;postid=". $post->ID . "' title='". $wpfp_options['add_favorite'] ."' rel='nofollow'>". $wpfp_options['add_favorite'] ."</a>";
@@ -74,7 +74,7 @@ function wpfp_list_favorite_posts($before = "<li>", $after = "</li>") {
 
     # collect favorites from cookie and if user is logged in from database.
     if (is_user_logged_in()):
-        $favorite_post_ids = get_usermeta(wpfp_get_current_user_id(),'wpfp_favorites');
+        $favorite_post_ids = wpfp_get_user_meta();
     endif;
 
     if (isset($_COOKIE['wp-favorite-posts'])):
@@ -113,12 +113,23 @@ function wpfp_clear_favorites() {
     if (isset($_COOKIE['wp-favorite-posts'])):
         foreach ($_COOKIE['wp-favorite-posts'] as $post_id => $val) {
             wpfp_set_cookie($post_id, "");
-    }
+        }
     endif;
     if (is_user_logged_in()) {
         if (!delete_usermeta(wpfp_get_current_user_id(), 'wpfp_favorites')) return false;
     }
     return true;
+}
+function wpfp_remove_favorite($post_id) {
+    $a = true;
+    if (is_user_logged_in()) {
+        $user_favorites = wpfp_get_user_meta();
+        $user_favorites = array_diff($user_favorites, array($post_id));
+        $user_favorites = array_values($user_favorites);
+        $a = wpfp_update_user_meta($user_favorites);
+    }
+    if ($a) $a = wpfp_set_cookie($_REQUEST['postid'], "");
+    return $a;
 }
 
 function wp_favorite_posts() {
@@ -126,18 +137,20 @@ function wp_favorite_posts() {
 
     if ($_REQUEST['wpfpaction'] == 'add') {
         if (is_user_logged_in()) {
-            $a = wpfp_update_usermeta($_REQUEST['postid']);
+            $a = wpfp_add_to_usermeta($_REQUEST['postid']);
         } else {
             $a = wpfp_set_cookie($_REQUEST['postid'], "added");
         }
         if ($a) die($wpfp_options['added']);
+        else die("ERROR");
 
     } else if ($_REQUEST['wpfpaction'] == 'remove') {
-        $a = wpfp_set_cookie($_REQUEST['postid'], "");
-        if ($a) die($wpfp_options['removed']);
+        if (wpfp_remove_favorite($_REQUEST['postid'])) die($wpfp_options['removed']);
+        else die("ERROR");
 
     } else if ($_REQUEST['wpfpaction'] == 'clear') {
         if (wpfp_clear_favorites()) die($wpfp_options['cleared']);
+        else die("ERROR");
     }
 }
 add_action('template_redirect', 'wp_favorite_posts');
@@ -191,5 +204,10 @@ function wpfp_get_current_user_id() {
     get_currentuserinfo();
     return $current_user->ID;
 }
-
+function wpfp_get_user_meta() {
+    return get_usermeta(wpfp_get_current_user_id(), 'wpfp_favorites');
+}
+function wpfp_update_user_meta($arr) {
+    return update_usermeta(wpfp_get_current_user_id(),'wpfp_favorites',$arr);
+}
 ?>
