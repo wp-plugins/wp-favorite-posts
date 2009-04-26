@@ -12,6 +12,8 @@ if ( isset($_POST['submit']) ) {
 	$wpfp_options['favorites_empty'] = addslashes($_POST['favorites_empty']);
 	$wpfp_options['rem'] = addslashes($_POST['rem']);
 	$wpfp_options['cookie_warning'] = addslashes($_POST['cookie_warning']);
+	$wpfp_options['opt_only_registered'] = addslashes($_POST['opt_only_registered']);
+	$wpfp_options['text_only_registered'] = addslashes($_POST['text_only_registered']);
 
 	update_option('wpfp_options', $wpfp_options);
 }
@@ -47,10 +49,16 @@ $wpfp_options = get_option('wpfp_options');
 		<th><?php _e("Text for favorites are empty", "wp-favorite-posts") ?></th><td><input type="text" name="favorites_empty" value="<?php echo stripslashes($wpfp_options['favorites_empty']); ?>" /></td>
 	</tr>
 	<tr>
-		<th><?php _e("Text for [remove]", "wp-favorite-posts") ?></th><td><input type="text" name="rem" value="<?php echo stripslashes($wpfp_options['rem']); ?>" /></td>
+		<th><?php _e("Text for [remove] link", "wp-favorite-posts") ?></th><td><input type="text" name="rem" value="<?php echo stripslashes($wpfp_options['rem']); ?>" /></td>
 	</tr>
 	<tr>
 		<th><?php _e("Text for favorites saved to cookies", "wp-favorite-posts") ?></th><td><textarea name="cookie_warning" rows="2" cols="40"><?php echo stripslashes($wpfp_options['cookie_warning']); ?></textarea></td>
+	</tr>
+	<tr>
+        <th><?php _e("Text for \"only registered users can favorite\" error message", "wp-favorite-posts") ?></th><td><textarea name="text_only_registered" rows="2" cols="40"><?php echo stripslashes($wpfp_options['text_only_registered']); ?></textarea></td>
+	</tr>
+	<tr>
+		<th><?php _e("Only <strong>registered users</strong> can favorite", "wp-favorite-posts") ?></th><td><input type="checkbox" name="opt_only_registered" value="1" <?php if (stripslashes($wpfp_options['opt_only_registered']) == "1") echo "checked='checked'"; ?> /></td>
 	</tr>
 	<tr>
 		<th></th><td><input type="submit" name="submit" class="button" value="<?php _e("Save Changes", "wp-favorite-posts") ?>" /></td>

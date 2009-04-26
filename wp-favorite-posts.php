@@ -43,13 +43,16 @@ function wpfp_add_to_usermeta($post_id) {
     return true;
 }
 
-function wpfp_check_cookie($cid) {
+function wpfp_check_favorited($cid) {
+    if (is_user_logged_in()):
+        $favorite_post_ids = wpfp_get_user_meta();
+        if ($favorite_post_ids)
+            foreach ($favorite_post_ids as $fpost_id)
+                if ($fpost_id == $cid) return true;
+    endif;
     if (isset($_COOKIE['wp-favorite-posts'])):
-        foreach ($_COOKIE['wp-favorite-posts'] as $post_id => $val) {
-            if ($post_id == $cid) {
-                return true;
-            }
-        }
+        foreach ($_COOKIE['wp-favorite-posts'] as $fpost_id => $val)
+            if ($fpost_id == $cid) return true;
     endif;
     return false;
 }
@@ -59,7 +62,7 @@ function wpfp_link($return = 0) {
     $str = "<span class='wpfp-span'>";
     $str .= wpfp_loading_img();
     $wpfp_options = get_option('wpfp_options');
-    if (wpfp_check_cookie($post->ID)):
+    if (wpfp_check_favorited($post->ID)):
         $str .= "<a class='wpfp-link' href='?wpfpaction=remove&amp;postid=" . $post->ID ."' title='". $wpfp_options['remove_favorite'] ."' rel='nofollow'>". $wpfp_options['remove_favorite'] ."</a>";
     else:
         $str .= "<a class='wpfp-link' href='?wpfpaction=add&amp;postid=". $post->ID . "' title='". $wpfp_options['add_favorite'] ."' rel='nofollow'>". $wpfp_options['add_favorite'] ."</a>";
@@ -135,23 +138,28 @@ function wpfp_remove_favorite($post_id) {
 function wp_favorite_posts() {
     $wpfp_options = get_option('wpfp_options');
 
-    if ($_REQUEST['wpfpaction'] == 'add') {
-        if (is_user_logged_in()) {
-            $a = wpfp_add_to_usermeta($_REQUEST['postid']);
-        } else {
-            $a = wpfp_set_cookie($_REQUEST['postid'], "added");
+    if (isset($_REQUEST['wpfpaction'])):
+        if ($_REQUEST['wpfpaction'] == 'add') {
+            if ($wpfp_options['opt_only_registered'] && !is_user_logged_in() ):
+                die($wpfp_options['text_only_registered']);
+            else:
+                if (is_user_logged_in()) {
+                    $a = wpfp_add_to_usermeta($_REQUEST['postid']);
+                } else {
+                    $a = wpfp_set_cookie($_REQUEST['postid'], "added");
+                }
+                if ($a) die($wpfp_options['added']);
+                else die("ERROR");
+            endif;
+        } else if ($_REQUEST['wpfpaction'] == 'remove') {
+            if (wpfp_remove_favorite($_REQUEST['postid'])) die($wpfp_options['removed']);
+            else die("ERROR");
+
+        } else if ($_REQUEST['wpfpaction'] == 'clear') {
+            if (wpfp_clear_favorites()) die($wpfp_options['cleared']);
+            else die("ERROR");
         }
-        if ($a) die($wpfp_options['added']);
-        else die("ERROR");
-
-    } else if ($_REQUEST['wpfpaction'] == 'remove') {
-        if (wpfp_remove_favorite($_REQUEST['postid'])) die($wpfp_options['removed']);
-        else die("ERROR");
-
-    } else if ($_REQUEST['wpfpaction'] == 'clear') {
-        if (wpfp_clear_favorites()) die($wpfp_options['cleared']);
-        else die("ERROR");
-    }
+    endif;
 }
 add_action('template_redirect', 'wp_favorite_posts');
 
@@ -187,6 +195,7 @@ function wpfp_init() {
     $wpfp_options['favorites_empty'] = "Favorite list is empty.";
     $wpfp_options['cookie_warning'] = "Your favorite posts saved to your browsers cookies. If you clear cookies also favorite posts will be deleted.";
     $wpfp_options['rem'] = "remove";
+    $wpfp_options['text_only_registered'] = "Only registered users can favorite!";
     add_option('wpfp_options', $wpfp_options, 'Favorite Posts Options');
 }
 add_action('activate_wp-favorite-posts/wp-favorite-posts.php', 'wpfp_init');
