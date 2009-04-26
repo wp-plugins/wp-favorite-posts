@@ -2,6 +2,13 @@
 WP Favorite Posts - ChangeLog
 http://wordpress.org/extend/plugins/wp-favorite-posts/
 ------------------
+Version 1.2
+-----------
+2009-04-26 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Added database integration. 
+		- If a user logged in then favorites data will save to database instead of cookies.
+		- If user not logged in data will save to cookies.
+	* Added "only registered users can favorite" option.
 
 Version 1.1.7
 -----------
