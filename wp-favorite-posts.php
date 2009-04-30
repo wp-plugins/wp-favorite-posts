@@ -148,13 +148,18 @@ function wp_favorite_posts() {
                 } else {
                     $a = wpfp_set_cookie($_REQUEST['postid'], "added");
                 }
-                if ($a) die($wpfp_options['added']);
+                if ($a) {
+                    wpfp_update_post_meta($_REQUEST['postid'], 1);
+                    die($wpfp_options['added']);
+                }
                 else die("ERROR");
             endif;
         } else if ($_REQUEST['wpfpaction'] == 'remove') {
-            if (wpfp_remove_favorite($_REQUEST['postid'])) die($wpfp_options['removed']);
+            if (wpfp_remove_favorite($_REQUEST['postid'])) {
+                wpfp_update_post_meta($_REQUEST['postid'], -1);
+                die($wpfp_options['removed']);
+            }
             else die("ERROR");
-
         } else if ($_REQUEST['wpfpaction'] == 'clear') {
             if (wpfp_clear_favorites()) die($wpfp_options['cleared']);
             else die("ERROR");
@@ -213,10 +218,27 @@ function wpfp_get_current_user_id() {
     get_currentuserinfo();
     return $current_user->ID;
 }
+
 function wpfp_get_user_meta() {
     return get_usermeta(wpfp_get_current_user_id(), 'wpfp_favorites');
 }
+
 function wpfp_update_user_meta($arr) {
     return update_usermeta(wpfp_get_current_user_id(),'wpfp_favorites',$arr);
+}
+
+function wpfp_update_post_meta($post_id, $val) {
+    $val = wpfp_get_post_meta($post_id) + $val;
+    return add_post_meta($post_id, 'wpfp_favorites', $val, true) or update_post_meta($post_id, 'wpfp_favorites', $val);
+}
+
+function wpfp_get_post_meta($post_id) {
+    $val = get_post_meta($post_id, 'wpfp_favorites', true);
+    if ($val < 0) $val = 0;
+    return $val;
+}
+
+function wpfp_delete_post_meta($post_id) {
+    return delete_post_meta($post_id, 'wpfp_favorites');
 }
 ?>

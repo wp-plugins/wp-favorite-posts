@@ -2,6 +2,12 @@
 WP Favorite Posts - ChangeLog
 http://wordpress.org/extend/plugins/wp-favorite-posts/
 ------------------
+Version 1.2.1
+-----------
+2009-04-30 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Added "buy me a beer" section to admin page.
+	* Added favorite statistic feature.
+
 Version 1.2
 -----------
 2009-04-26 Hüseyin Berberoğlu <hberberoglu@gmail.com>
