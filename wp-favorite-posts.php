@@ -30,11 +30,6 @@ Author URI: http://birazkisisel.com
 
 define('WPFP_PATH', get_settings('home') . '/wp-content/plugins/wp-favorite-posts');
 
-function wpfp_set_cookie($post_id, $str) {
-    $expire = time()+60*60*24*30;
-    return setcookie("wp-favorite-posts[$post_id]", $str, $expire, "/");
-}
-
 function wpfp_add_to_usermeta($post_id) {
     $wpfp_favorites = array();
     $wpfp_favorites = wpfp_get_user_meta();
@@ -61,7 +56,7 @@ function wpfp_link($return = 0) {
     global $post;
     $str = "<span class='wpfp-span'>";
     $str .= wpfp_loading_img();
-    $wpfp_options = get_option('wpfp_options');
+    $wpfp_options = wpfp_get_options();
     if (wpfp_check_favorited($post->ID)):
         $str .= "<a class='wpfp-link' href='?wpfpaction=remove&amp;postid=" . $post->ID ."' title='". $wpfp_options['remove_favorite'] ."' rel='nofollow'>". $wpfp_options['remove_favorite'] ."</a>";
     else:
@@ -72,7 +67,7 @@ function wpfp_link($return = 0) {
 }
 
 function wpfp_list_favorite_posts($before = "<li>", $after = "</li>") {
-    $wpfp_options = get_option('wpfp_options');
+    $wpfp_options = wpfp_get_options();
     $favorite_post_ids = array();
 
     # collect favorites from cookie and if user is logged in from database.
@@ -136,7 +131,7 @@ function wpfp_remove_favorite($post_id) {
 }
 
 function wp_favorite_posts() {
-    $wpfp_options = get_option('wpfp_options');
+    $wpfp_options = wpfp_get_options();
 
     if (isset($_REQUEST['wpfpaction'])):
         if ($_REQUEST['wpfpaction'] == 'add') {
@@ -149,14 +144,14 @@ function wp_favorite_posts() {
                     $a = wpfp_set_cookie($_REQUEST['postid'], "added");
                 }
                 if ($a) {
-                    wpfp_update_post_meta($_REQUEST['postid'], 1);
+                    if ($wpfp_options['statics']) wpfp_update_post_meta($_REQUEST['postid'], 1);
                     die($wpfp_options['added']);
                 }
                 else die("ERROR");
             endif;
         } else if ($_REQUEST['wpfpaction'] == 'remove') {
             if (wpfp_remove_favorite($_REQUEST['postid'])) {
-                wpfp_update_post_meta($_REQUEST['postid'], -1);
+                if ($wpfp_options['statics']) wpfp_update_post_meta($_REQUEST['postid'], -1);
                 die($wpfp_options['removed']);
             }
             else die("ERROR");
@@ -201,6 +196,10 @@ function wpfp_init() {
     $wpfp_options['cookie_warning'] = "Your favorite posts saved to your browsers cookies. If you clear cookies also favorite posts will be deleted.";
     $wpfp_options['rem'] = "remove";
     $wpfp_options['text_only_registered'] = "Only registered users can favorite!";
+    $wpfp_options['statics'] = 1;
+    $wpfp_options['widget_title'] = "";
+    $wpfp_options['widget_limit'] = 5;
+    $wpfp_options[''] = 1;
     add_option('wpfp_options', $wpfp_options, 'Favorite Posts Options');
 }
 add_action('activate_wp-favorite-posts/wp-favorite-posts.php', 'wpfp_init');
@@ -213,6 +212,86 @@ function wpfp_config_page() {
 }
 add_action('admin_menu', 'wpfp_config_page');
 
+function wpfp_update_user_meta($arr) {
+    return update_usermeta(wpfp_get_current_user_id(),'wpfp_favorites',$arr);
+}
+
+function wpfp_update_post_meta($post_id, $val) {
+    $val = wpfp_get_post_meta($post_id) + $val;
+    return add_post_meta($post_id, 'wpfp_favorites', $val, true) or update_post_meta($post_id, 'wpfp_favorites', $val);
+}
+
+function wpfp_delete_post_meta($post_id) {
+    return delete_post_meta($post_id, 'wpfp_favorites');
+}
+function wpfp_widget_init() {
+    function wpfp_widget_view($args) {
+        extract($args);
+        global $wpdb;
+        $options = wpfp_get_options();
+        if (isset($options['widget_limit'])) {
+            $limit = $options['widget_limit'];
+        } else {
+            $limit = 5;
+        }
+        $query = "SELECT post_id, meta_value FROM $wpdb->postmeta WHERE meta_key='wpfp_favorites' AND meta_value > 0 ORDER BY meta_value DESC LIMIT 0, $limit";
+        $results = $wpdb->get_results($query);
+        $title = empty($options['widget_title']) ? 'Most Favorited Posts' : $options['widget_title'];
+        echo $before_widget;
+        echo $before_title
+             . $title
+             . $after_title;
+        if ($results) {
+            echo "<ul>";
+            foreach ($results as $o):
+                echo "<li>";
+                $p = get_post($o->post_id);
+                echo "<a href='".get_permalink($o->post_id)."' title='". $p->post_title ."'>" . $p->post_title . "</a> ($o->meta_value)";
+                echo "</li>";
+                echo $post->post_id;
+            endforeach;
+            echo "</ul>";
+        }
+        echo $after_widget;
+    }
+    function wpfp_widget_control() {
+        $options = wpfp_get_options();
+        if (isset($_POST["wpfp-widget-submit"])):
+            $options['widget_title'] = strip_tags(stripslashes($_POST['wpfp-title']));
+            $options['widget_limit'] = strip_tags(stripslashes($_POST['wpfp-limit']));
+            update_option("wpfp_options", $options);
+        endif;
+        $title = $options['widget_title'];
+        $limit = $options['widget_limit'];
+    ?>
+        <p>
+            <label for="wpfp-title">
+                <?php _e('Title:'); ?> <input type="text" value="<?php echo $title; ?>" class="widefat" id="wpfp-title" name="wpfp-title" />
+            </label>
+        </p>
+        <p>
+            <label for="wpfp-limit">
+                <?php _e('Number of posts to show:'); ?> <input type="text" value="<?php echo $limit; ?>" style="width: 28px; text-align:center;" id="wpfp-limit" name="wpfp-limit" />
+            </label>
+        </p>
+        <?php if (!$options['statics']) { ?>
+        <p>
+            You must enable statics from favorite posts <a href="plugins.php?page=wp-favorite-posts" title="Favorite Posts Configuration">configuration page</a>.
+        </p>
+        <?php } ?>
+        <input type="hidden" name="wpfp-widget-submit" value="1" />
+    <?php
+    }
+    register_sidebar_widget('Most Favorited Posts', 'wpfp_widget_view');
+    register_widget_control('Most Favorited Posts', 'wpfp_widget_control' );
+}
+add_action('widgets_init', 'wpfp_widget_init');
+
+//---\\
+function wpfp_get_options() {
+   return  get_option('wpfp_options');
+}
+
 function wpfp_get_current_user_id() {
     global $current_user;
     get_currentuserinfo();
@@ -223,22 +302,13 @@ function wpfp_get_user_meta() {
     return get_usermeta(wpfp_get_current_user_id(), 'wpfp_favorites');
 }
 
-function wpfp_update_user_meta($arr) {
-    return update_usermeta(wpfp_get_current_user_id(),'wpfp_favorites',$arr);
-}
-
-function wpfp_update_post_meta($post_id, $val) {
-    $val = wpfp_get_post_meta($post_id) + $val;
-    return add_post_meta($post_id, 'wpfp_favorites', $val, true) or update_post_meta($post_id, 'wpfp_favorites', $val);
-}
-
 function wpfp_get_post_meta($post_id) {
     $val = get_post_meta($post_id, 'wpfp_favorites', true);
     if ($val < 0) $val = 0;
     return $val;
 }
 
-function wpfp_delete_post_meta($post_id) {
-    return delete_post_meta($post_id, 'wpfp_favorites');
+function wpfp_set_cookie($post_id, $str) {
+    $expire = time()+60*60*24*30;
+    return setcookie("wp-favorite-posts[$post_id]", $str, $expire, "/");
 }
-?>
