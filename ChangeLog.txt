@@ -4,6 +4,9 @@ http://wordpress.org/extend/plugins/wp-favorite-posts/
 ------------------
 Version 1.2.1
 -----------
+2009-05-14 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Added "Most Favorited Posts" widget.
+
 2009-04-30 Hüseyin Berberoğlu <hberberoglu@gmail.com>
 	* Added "buy me a beer" section to admin page.
 	* Added favorite statistic feature.
