@@ -4,9 +4,8 @@ jQuery(document).ready( function($) {
     loadingImg = $(this).prev();
     loadingImg.removeClass("wpfp-hideloading");
     loadingImg.addClass("wpfp-showloading");
-    url = document.location.href;
-    params = $(this).attr("href");
-    params = params.replace("?", "");
+    url = document.location.href.split('#')[0];
+    params = $(this).attr("href").replace('?', '');
     $.get(url, params, function(data) {
             loadingImg.removeClass("wpfp-showloading");
             loadingImg.addClass("wpfp-hideloading");
