@@ -116,7 +116,7 @@ function wpfp_before_link_img() {
     } else if ($option == 'custom') {
         return "<img src='" . $options['custom_before_image'] . "' alt='Favorite' title='Favorite' class='wpfp-img' />";
     } else {
-        return "<img src='". WPFP_PATH . "/img/" . $img . "' alt='Favorite' title='Favorite' class='wpfp-img' />";
+        return "<img src='". WPFP_PATH . "/img/" . $option . "' alt='Favorite' title='Favorite' class='wpfp-img' />";
     }
 }
 
