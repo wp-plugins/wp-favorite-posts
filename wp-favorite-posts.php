@@ -224,34 +224,35 @@ function wpfp_update_post_meta($post_id, $val) {
 function wpfp_delete_post_meta($post_id) {
     return delete_post_meta($post_id, 'wpfp_favorites');
 }
+function wpfp_list_most_favorited($limit=5) {
+    global $wpdb;
+    $query = "SELECT post_id, meta_value FROM $wpdb->postmeta WHERE meta_key='wpfp_favorites' AND meta_value > 0 ORDER BY meta_value DESC LIMIT 0, $limit";
+    $results = $wpdb->get_results($query);
+    if ($results) {
+        echo "<ul>";
+        foreach ($results as $o):
+            echo "<li>";
+            $p = get_post($o->post_id);
+            echo "<a href='".get_permalink($o->post_id)."' title='". $p->post_title ."'>" . $p->post_title . "</a> ($o->meta_value)";
+            echo "</li>";
+            echo $post->post_id;
+        endforeach;
+        echo "</ul>";
+    }
+}
 function wpfp_widget_init() {
     function wpfp_widget_view($args) {
         extract($args);
-        global $wpdb;
         $options = wpfp_get_options();
         if (isset($options['widget_limit'])) {
             $limit = $options['widget_limit'];
-        } else {
-            $limit = 5;
         }
-        $query = "SELECT post_id, meta_value FROM $wpdb->postmeta WHERE meta_key='wpfp_favorites' AND meta_value > 0 ORDER BY meta_value DESC LIMIT 0, $limit";
-        $results = $wpdb->get_results($query);
         $title = empty($options['widget_title']) ? 'Most Favorited Posts' : $options['widget_title'];
         echo $before_widget;
         echo $before_title
              . $title
              . $after_title;
-        if ($results) {
-            echo "<ul>";
-            foreach ($results as $o):
-                echo "<li>";
-                $p = get_post($o->post_id);
-                echo "<a href='".get_permalink($o->post_id)."' title='". $p->post_title ."'>" . $p->post_title . "</a> ($o->meta_value)";
-                echo "</li>";
-                echo $post->post_id;
-            endforeach;
-            echo "</ul>";
-        }
+        wpfp_list_most_favorited($limit);
         echo $after_widget;
     }
     function wpfp_widget_control() {
