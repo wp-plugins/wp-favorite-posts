@@ -15,6 +15,8 @@ if ( isset($_POST['submit']) ) {
 	$wpfp_options['opt_only_registered'] = addslashes($_POST['opt_only_registered']);
 	$wpfp_options['text_only_registered'] = addslashes($_POST['text_only_registered']);
 	$wpfp_options['statics'] = addslashes($_POST['statics']);
+	$wpfp_options['before_image'] = addslashes($_POST['before_image']);
+	$wpfp_options['custom_before_image'] = addslashes($_POST['custom_before_image']);
 
 	update_option('wpfp_options', $wpfp_options);
 }
@@ -80,12 +82,43 @@ if ( isset($_POST['submit']) ) {
         </td>
     </tr>
     <tr>
+        <th><?php _e("Before Link Image", "wp-favorite-posts") ?></th>
+        <td>
+            <p>
+            <?php
+            $images[] = "star.png";
+            $images[] = "heart.png";
+            $images[] = "bullet_star.png";
+            foreach ($images as $img):
+            ?>
+            <label for="<?php echo $img ?>">
+                <input type="radio" name="before_image" id="<?php echo $img ?>" value="<?php echo $img ?>" <?php if ($wpfp_options['before_image'] == $img) echo "checked='checked'" ?> />
+                <img src="<?php echo WPFP_PATH; ?>/img/<?php echo $img; ?>" alt="<?php echo $img; ?>" title="<?php echo $img; ?>" class="wpfp-img" />
+            </label>
+            <br />
+            <?php
+            endforeach;
+            ?>
+            <label for="custom">
+                <input type="radio" name="before_image" id="custom" value="custom" <?php if ($wpfp_options['before_image'] == 'custom') echo "checked='checked'" ?> />
+                Custom Image URL :
+            </label>
+            <input type="custom_before_image" name="custom_before_image" value="<?php echo stripslashes($wpfp_options['custom_before_image']); ?>" />
+            <br />
+            <label for="none">
+                <input type="radio" name="before_image" id="none" value="" <?php if ($wpfp_options['before_image'] == '') echo "checked='checked'" ?> />
+                No Image
+            </label>
+        </td>
+    </tr>
+
+    <tr>
         <td colspan="2">
             <p>* If statics enabled plugin will count how much a post added to favorites.<br />
                 You can show this statics with <a href="widgets.php" title="Go to widgets">"Most Favorited Posts" widget</a>.</p>
         </td>
     </tr>
-	<tr>
+    <tr>
         <th></th>
         <td>
             <input type="submit" name="submit" class="button" value="<?php _e('Update options &raquo;'); ?>" />

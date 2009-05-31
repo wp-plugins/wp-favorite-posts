@@ -55,6 +55,7 @@ function wpfp_check_favorited($cid) {
 function wpfp_link($return = 0) {
     global $post;
     $str = "<span class='wpfp-span'>";
+    $str .= wpfp_before_link_img();
     $str .= wpfp_loading_img();
     $wpfp_options = wpfp_get_options();
     if (wpfp_check_favorited($post->ID)):
@@ -97,6 +98,7 @@ function wpfp_list_favorite_posts($before = "<li>", $after = "</li>") {
         echo $after;
     endif;
     echo "</ul>";
+    echo wpfp_before_link_img();
     echo wpfp_loading_img();
     echo "<a class='wpfp-link' href='?wpfpaction=clear' rel='nofollow'>". $wpfp_options['clear'] . "</a>";
     echo "</span>";
@@ -104,7 +106,18 @@ function wpfp_list_favorite_posts($before = "<li>", $after = "</li>") {
 }
 
 function wpfp_loading_img() {
-    return "<img src='".WPFP_PATH."/img/loading.gif' alt='Loading' title='Loading' class='wpfp-hideloading wpfp-loading' />";
+    return "<img src='".WPFP_PATH."/img/loading.gif' alt='Loading' title='Loading' class='wpfp-hide wpfp-img' />";
+}
+function wpfp_before_link_img() {
+    $options = wpfp_get_options();
+    $option = $options['before_image'];
+    if ($option == '') {
+        return "";
+    } else if ($option == 'custom') {
+        return "<img src='" . $options['custom_before_image'] . "' alt='Favorite' title='Favorite' class='wpfp-img' />";
+    } else {
+        return "<img src='". WPFP_PATH . "/img/" . $img . "' alt='Favorite' title='Favorite' class='wpfp-img' />";
+    }
 }
 
 function wpfp_clear_favorites() {
@@ -197,9 +210,10 @@ function wpfp_init() {
     $wpfp_options['rem'] = "remove";
     $wpfp_options['text_only_registered'] = "Only registered users can favorite!";
     $wpfp_options['statics'] = 1;
-    $wpfp_options['widget_title'] = "";
+    $wpfp_options['widget_title'] = '';
     $wpfp_options['widget_limit'] = 5;
-    $wpfp_options[''] = 1;
+    $wpfp_options['before_image'] = 'star.png';
+    $wpfp_options['custom_before_image'] = '';
     add_option('wpfp_options', $wpfp_options, 'Favorite Posts Options');
 }
 add_action('activate_wp-favorite-posts/wp-favorite-posts.php', 'wpfp_init');
@@ -290,7 +304,7 @@ add_action('widgets_init', 'wpfp_widget_init');
 
 //---\\
 function wpfp_get_options() {
-   return  get_option('wpfp_options');
+   return get_option('wpfp_options');
 }
 
 function wpfp_get_current_user_id() {
