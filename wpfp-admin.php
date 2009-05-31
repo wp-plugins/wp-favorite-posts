@@ -74,13 +74,7 @@ if ( isset($_POST['submit']) ) {
 	<tr>
 		<th><?php _e("Only <strong>registered users</strong> can favorite", "wp-favorite-posts") ?></th><td><input type="checkbox" name="opt_only_registered" value="1" <?php if (stripslashes($wpfp_options['opt_only_registered']) == "1") echo "checked='checked'"; ?> /></td>
     </tr>
-	<tr>
-        <th><?php _e("Most favorited posts statics", "wp-favorite-posts") ?>*</th>
-        <td>
-            <label for="stats-enabled"><input type="radio" name="statics" id="stats-enabled" value="1" <?php if ($wpfp_options['statics']) echo "checked='checked'" ?> /> Enabled</label>
-            <label for="stats-disabled"><input type="radio" name="statics" id="stats-disabled" value="0" <?php if (!$wpfp_options['statics']) echo "checked='checked'" ?> /> Disabled</label>
-        </td>
-    </tr>
+
     <tr>
         <th><?php _e("Before Link Image", "wp-favorite-posts") ?></th>
         <td>
@@ -111,13 +105,20 @@ if ( isset($_POST['submit']) ) {
             </label>
         </td>
     </tr>
-
+	<tr>
+        <th><?php _e("Most favorited posts statics", "wp-favorite-posts") ?>*</th>
+        <td>
+            <label for="stats-enabled"><input type="radio" name="statics" id="stats-enabled" value="1" <?php if ($wpfp_options['statics']) echo "checked='checked'" ?> /> Enabled</label>
+            <label for="stats-disabled"><input type="radio" name="statics" id="stats-disabled" value="0" <?php if (!$wpfp_options['statics']) echo "checked='checked'" ?> /> Disabled</label>
+        </td>
+    </tr>
     <tr>
         <td colspan="2">
             <p>* If statics enabled plugin will count how much a post added to favorites.<br />
                 You can show this statics with <a href="widgets.php" title="Go to widgets">"Most Favorited Posts" widget</a>.</p>
         </td>
     </tr>
+
     <tr>
         <th></th>
         <td>
