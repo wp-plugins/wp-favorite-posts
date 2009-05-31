@@ -4,7 +4,7 @@ Donate link: http://birazkisisel.com/projects/wp-favorite-posts
 Tags: favorite, posts, favorites, cookie, wp-favorite-posts
 Requires at least: 2.0.2
 Tested up to: 2.7.1
-Stable tag: 1.2.1
+Stable tag: 1.3
 
 Allows visitors to add favorite posts. This plugin use cookies for saving data so
 unregistered users can favorite a post.
@@ -18,7 +18,11 @@ saving data.
 - If user not logged in data will save to cookies.
 
 If you want you can choose "only registered users can favorite a post" option.
-And there is a widget named "Most Favorited Posts"
+There is a widget named "Most Favorited Posts". And you can use this template
+tag for listing most favorited posts;
+
+<h2>Most Favorited Posts</h2>
+<?php wpfp_list_most_favorited(5); ?>
 
 If you use WP Super Cache you must add page (which you show favorites) URI to "Accepted Filenames &
 Rejected URIs".
