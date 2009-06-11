@@ -28,7 +28,40 @@ Author URI: http://birazkisisel.com
 
 */
 
-define('WPFP_PATH', get_settings('home') . '/wp-content/plugins/wp-favorite-posts');
+include('wpfp-config.php');
+
+function wp_favorite_posts() {
+    $wpfp_options = wpfp_get_options();
+
+    if (isset($_REQUEST['wpfpaction'])):
+        if ($_REQUEST['wpfpaction'] == 'add') {
+            if ($wpfp_options['opt_only_registered'] && !is_user_logged_in() ):
+                die($wpfp_options['text_only_registered']);
+            else:
+                if (is_user_logged_in()) {
+                    $a = wpfp_add_to_usermeta($_REQUEST['postid']);
+                } else {
+                    $a = wpfp_set_cookie($_REQUEST['postid'], "added");
+                }
+                if ($a) {
+                    if ($wpfp_options['statics']) wpfp_update_post_meta($_REQUEST['postid'], 1);
+                    die($wpfp_options['added']);
+                }
+                else die("ERROR");
+            endif;
+        } else if ($_REQUEST['wpfpaction'] == 'remove') {
+            if (wpfp_remove_favorite($_REQUEST['postid'])) {
+                if ($wpfp_options['statics']) wpfp_update_post_meta($_REQUEST['postid'], -1);
+                die($wpfp_options['removed']);
+            }
+            else die("ERROR");
+        } else if ($_REQUEST['wpfpaction'] == 'clear') {
+            if (wpfp_clear_favorites()) die($wpfp_options['cleared']);
+            else die("ERROR");
+        }
+    endif;
+}
+add_action('template_redirect', 'wp_favorite_posts');
 
 function wpfp_add_to_usermeta($post_id) {
     $wpfp_favorites = array();
@@ -45,8 +78,8 @@ function wpfp_check_favorited($cid) {
             foreach ($favorite_post_ids as $fpost_id)
                 if ($fpost_id == $cid) return true;
     endif;
-    if (isset($_COOKIE['wp-favorite-posts'])):
-        foreach ($_COOKIE['wp-favorite-posts'] as $fpost_id => $val)
+    if (wpfp_get_cookie()):
+        foreach (wpfp_get_cookie() as $fpost_id => $val)
             if ($fpost_id == $cid) return true;
     endif;
     return false;
@@ -76,8 +109,8 @@ function wpfp_list_favorite_posts($before = "<li>", $after = "</li>") {
         $favorite_post_ids = wpfp_get_user_meta();
     endif;
 
-    if (isset($_COOKIE['wp-favorite-posts'])):
-        foreach ($_COOKIE['wp-favorite-posts'] as $post_id => $post_title) {
+    if (wpfp_get_cookie()):
+        foreach (wpfp_get_cookie() as $post_id => $post_title) {
             array_push($favorite_post_ids, $post_id);
         }
     endif;
@@ -121,13 +154,22 @@ function wpfp_before_link_img() {
 }
 
 function wpfp_clear_favorites() {
-    if (isset($_COOKIE['wp-favorite-posts'])):
-        foreach ($_COOKIE['wp-favorite-posts'] as $post_id => $val) {
+    if (wpfp_get_cookie()):
+        foreach (wpfp_get_cookie() as $post_id => $val) {
             wpfp_set_cookie($post_id, "");
+            wpfp_update_post_meta($post_id, -1);
         }
     endif;
     if (is_user_logged_in()) {
-        if (!delete_usermeta(wpfp_get_current_user_id(), 'wpfp_favorites')) return false;
+        $favorite_post_ids = wpfp_get_user_meta();
+        if ($favorite_post_ids):
+            foreach ($favorite_post_ids as $post_id) {
+                wpfp_update_post_meta($post_id, -1);
+            }
+        endif;
+        if (!delete_usermeta(wpfp_get_current_user_id(), WPFP_META_KEY)) {
+            return false;
+        }
     }
     return true;
 }
@@ -142,39 +184,6 @@ function wpfp_remove_favorite($post_id) {
     if ($a) $a = wpfp_set_cookie($_REQUEST['postid'], "");
     return $a;
 }
-
-function wp_favorite_posts() {
-    $wpfp_options = wpfp_get_options();
-
-    if (isset($_REQUEST['wpfpaction'])):
-        if ($_REQUEST['wpfpaction'] == 'add') {
-            if ($wpfp_options['opt_only_registered'] && !is_user_logged_in() ):
-                die($wpfp_options['text_only_registered']);
-            else:
-                if (is_user_logged_in()) {
-                    $a = wpfp_add_to_usermeta($_REQUEST['postid']);
-                } else {
-                    $a = wpfp_set_cookie($_REQUEST['postid'], "added");
-                }
-                if ($a) {
-                    if ($wpfp_options['statics']) wpfp_update_post_meta($_REQUEST['postid'], 1);
-                    die($wpfp_options['added']);
-                }
-                else die("ERROR");
-            endif;
-        } else if ($_REQUEST['wpfpaction'] == 'remove') {
-            if (wpfp_remove_favorite($_REQUEST['postid'])) {
-                if ($wpfp_options['statics']) wpfp_update_post_meta($_REQUEST['postid'], -1);
-                die($wpfp_options['removed']);
-            }
-            else die("ERROR");
-        } else if ($_REQUEST['wpfpaction'] == 'clear') {
-            if (wpfp_clear_favorites()) die($wpfp_options['cleared']);
-            else die("ERROR");
-        }
-    endif;
-}
-add_action('template_redirect', 'wp_favorite_posts');
 
 function wpfp_content_filter($content) {
     if (is_page()):
@@ -227,20 +236,20 @@ function wpfp_config_page() {
 add_action('admin_menu', 'wpfp_config_page');
 
 function wpfp_update_user_meta($arr) {
-    return update_usermeta(wpfp_get_current_user_id(),'wpfp_favorites',$arr);
+    return update_usermeta(wpfp_get_current_user_id(),WPFP_META_KEY,$arr);
 }
 
 function wpfp_update_post_meta($post_id, $val) {
     $val = wpfp_get_post_meta($post_id) + $val;
-    return add_post_meta($post_id, 'wpfp_favorites', $val, true) or update_post_meta($post_id, 'wpfp_favorites', $val);
+    return add_post_meta($post_id, WPFP_META_KEY, $val, true) or update_post_meta($post_id, WPFP_META_KEY, $val);
 }
 
 function wpfp_delete_post_meta($post_id) {
-    return delete_post_meta($post_id, 'wpfp_favorites');
+    return delete_post_meta($post_id, WPFP_META_KEY);
 }
 function wpfp_list_most_favorited($limit=5) {
     global $wpdb;
-    $query = "SELECT post_id, meta_value FROM $wpdb->postmeta WHERE meta_key='wpfp_favorites' AND meta_value > 0 ORDER BY meta_value DESC LIMIT 0, $limit";
+    $query = "SELECT post_id, meta_value FROM $wpdb->postmeta WHERE meta_key='".WPFP_META_KEY."' AND meta_value > 0 ORDER BY CAST(meta_value AS DECIMAL) DESC LIMIT 0, $limit";
     $results = $wpdb->get_results($query);
     if ($results) {
         echo "<ul>";
@@ -303,6 +312,10 @@ function wpfp_widget_init() {
 add_action('widgets_init', 'wpfp_widget_init');
 
 //---\\
+function wpfp_get_cookie() {
+    return $_COOKIE[WPFP_COOKIE_KEY];
+}
+
 function wpfp_get_options() {
    return get_option('wpfp_options');
 }
@@ -314,11 +327,11 @@ function wpfp_get_current_user_id() {
 }
 
 function wpfp_get_user_meta() {
-    return get_usermeta(wpfp_get_current_user_id(), 'wpfp_favorites');
+    return get_usermeta(wpfp_get_current_user_id(), WPFP_META_KEY);
 }
 
 function wpfp_get_post_meta($post_id) {
-    $val = get_post_meta($post_id, 'wpfp_favorites', true);
+    $val = get_post_meta($post_id, WPFP_META_KEY, true);
     if ($val < 0) $val = 0;
     return $val;
 }
