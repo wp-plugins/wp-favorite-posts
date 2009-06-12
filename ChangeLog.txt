@@ -2,6 +2,64 @@
 WP Favorite Posts - ChangeLog
 http://wordpress.org/extend/plugins/wp-favorite-posts/
 ------------------
+Version 1.3.1
+-----------
+2009-06-10 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Added Before Link Image feature.
+	* Refactor code and imporve DRY
+	* Fixed bug: Most favorite list's string sorting problem 2 > 11
+	* Fixed bug: Clear link not updating post's favorited count
+
+Version 1.3
+-----------
+2009-05-31 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Fixed bug: Plugin was working wrong in pages with links includes # character.
+	* Added template tag for Most Favorite Posts. There was already a widget for this.
+
+Version 1.2.1
+-----------
+2009-05-14 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Added "Most Favorited Posts" widget.
+
+2009-04-30 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Added "buy me a beer" section to admin page.
+	* Added favorite statistic feature.
+
+Version 1.2
+-----------
+2009-04-26 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Added database integration. 
+		- If a user logged in then favorites data will save to database instead of cookies.
+		- If user not logged in data will save to cookies.
+	* Added "only registered users can favorite" option.
+
+Version 1.1.7
+-----------
+2009-03-10 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Fixed duplicate loading image problem
+	* Added [wpfp-link] feature;
+		You can show favorite link only in preferred posts with writing
+		[wpfp-link] to the post content.
+
+Version 1.1.6
+-----------
+2009-03-05 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Fixed ajax problem.
+
+Version 1.1.5
+-----------
+2009-03-02 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Added rel="nofollow" to links.
+	* Favorite posts title language problem solved.
+	* ajax.js file renamed to wpfp.js
+
+2009-03-02 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Use XHTML valid links.
+	* Use class instead of id for html elements.
+	* Use more unique function names. All functions starts with wpfp.
+
+Version 1.1.4
+-----------
 Version 1.2.1
 -----------
 2009-05-14 Hüseyin Berberoğlu <hberberoglu@gmail.com>
