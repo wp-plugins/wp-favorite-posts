@@ -31,6 +31,13 @@ Author URI: http://birazkisisel.com
 include('wpfp-config.php');
 include('wpfp-public-funcs.php');
 
+add_action('template_redirect', 'wp_favorite_posts');
+add_filter('the_content','wpfp_content_filter',7);
+add_action('wp_print_scripts', 'wpfp_add_js_script');
+add_action('activate_wp-favorite-posts/wp-favorite-posts.php', 'wpfp_init');
+add_action('admin_menu', 'wpfp_config_page');
+add_action('widgets_init', 'wpfp_widget_init');
+
 function wp_favorite_posts() {
     $wpfp_options = wpfp_get_options();
 
@@ -62,7 +69,6 @@ function wp_favorite_posts() {
         }
     endif;
 }
-add_action('template_redirect', 'wp_favorite_posts');
 
 function wpfp_add_to_usermeta($post_id) {
     $wpfp_favorites = array();
@@ -114,13 +120,11 @@ function wpfp_content_filter($content) {
     #endif;
     return $content;
 }
-add_filter('the_content','wpfp_content_filter',7);
 
 function wpfp_add_js_script ( ) {
     echo '<link type="text/css" rel="stylesheet" href="' . WPFP_PATH . '/wpfp.css" />' . "\n";
     wp_enqueue_script( "wp-favroite-posts", WPFP_PATH . "/wpfp.js", array( 'jquery' ) );
 }
-add_action('wp_print_scripts', 'wpfp_add_js_script');
 
 function wpfp_init() {
     $wpfp_options = array();
@@ -141,7 +145,7 @@ function wpfp_init() {
     $wpfp_options['custom_before_image'] = '';
     add_option('wpfp_options', $wpfp_options, 'Favorite Posts Options');
 }
-add_action('activate_wp-favorite-posts/wp-favorite-posts.php', 'wpfp_init');
+
 
 function wpfp_config() { include('wpfp-admin.php'); }
 
@@ -149,7 +153,6 @@ function wpfp_config_page() {
     if ( function_exists('add_submenu_page') )
         add_submenu_page('plugins.php', __('Favorite Posts'), __('Favorite Posts'), 'manage_options', 'wp-favorite-posts', 'wpfp_config');
 }
-add_action('admin_menu', 'wpfp_config_page');
 
 function wpfp_update_user_meta($arr) {
     return update_usermeta(wpfp_get_current_user_id(),WPFP_META_KEY,$arr);
@@ -225,7 +228,6 @@ function wpfp_widget_init() {
     register_sidebar_widget('Most Favorited Posts', 'wpfp_widget_view');
     register_widget_control('Most Favorited Posts', 'wpfp_widget_control' );
 }
-add_action('widgets_init', 'wpfp_widget_init');
 
 //---\\
 function wpfp_get_cookie() {
