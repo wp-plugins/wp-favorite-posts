@@ -29,14 +29,6 @@ Author URI: http://birazkisisel.com
 */
 
 include('wpfp-config.php');
-include('wpfp-public-funcs.php');
-
-add_action('template_redirect', 'wp_favorite_posts');
-add_filter('the_content','wpfp_content_filter',7);
-add_action('wp_print_scripts', 'wpfp_add_js_script');
-add_action('activate_wp-favorite-posts/wp-favorite-posts.php', 'wpfp_init');
-add_action('admin_menu', 'wpfp_config_page');
-add_action('widgets_init', 'wpfp_widget_init');
 
 function wp_favorite_posts() {
     $wpfp_options = wpfp_get_options();
@@ -69,6 +61,7 @@ function wp_favorite_posts() {
         }
     endif;
 }
+add_action('template_redirect', 'wp_favorite_posts');
 
 function wpfp_add_to_usermeta($post_id) {
     $wpfp_favorites = array();
@@ -92,6 +85,63 @@ function wpfp_check_favorited($cid) {
     return false;
 }
 
+function wpfp_link($return = 0) {
+    global $post;
+    $str = "<span class='wpfp-span'>";
+    $str .= wpfp_before_link_img();
+    $str .= wpfp_loading_img();
+    $wpfp_options = wpfp_get_options();
+    if (wpfp_check_favorited($post->ID)):
+        $str .= "<a class='wpfp-link' href='?wpfpaction=remove&amp;postid=" . $post->ID ."' title='". $wpfp_options['remove_favorite'] ."' rel='nofollow'>". $wpfp_options['remove_favorite'] ."</a>";
+    else:
+        $str .= "<a class='wpfp-link' href='?wpfpaction=add&amp;postid=". $post->ID . "' title='". $wpfp_options['add_favorite'] ."' rel='nofollow'>". $wpfp_options['add_favorite'] ."</a>";
+    endif;
+    $str .= "</span>";
+    if ($return) { return $str; } else { echo $str; }
+}
+function wpfp_get_users_favorites() {
+    $favorite_post_ids = array();
+
+    # collect favorites from cookie and if user is logged in from database.
+    if (is_user_logged_in()):
+        $favorite_post_ids = wpfp_get_user_meta();
+    endif;
+
+    if (wpfp_get_cookie()):
+        foreach (wpfp_get_cookie() as $post_id => $post_title) {
+            array_push($favorite_post_ids, $post_id);
+        }
+    endif;
+    return $favorite_post_ids;
+}
+
+function wpfp_list_favorite_posts($before = "<li>", $after = "</li>") {
+    $wpfp_options = wpfp_get_options();
+    $favorite_post_ids = wpfp_get_users_favorites();
+    # list favorites
+    echo "<span class='wpfp-span'>";
+    echo "<ul>";
+    if ($favorite_post_ids):
+        foreach ($favorite_post_ids as $post_id) {
+            $p = get_post($post_id);
+            echo $before;
+            echo "<a href='".get_permalink($post_id)."' title='". $p->post_title ."'>" . $p->post_title . "</a> ";
+            echo "[<a class='wpfp-link' href='?wpfpaction=remove&amp;postid=". $post_id ."' title='".$wpfp_options['rem']."' rel='nofollow'>".$wpfp_options['rem']."</a>]";
+            echo $after;
+        }
+    else:
+        echo $before;
+        echo $wpfp_options['favorites_empty'];
+        echo $after;
+    endif;
+    echo "</ul>";
+    echo wpfp_before_link_img();
+    echo wpfp_loading_img();
+    echo "<a class='wpfp-link' href='?wpfpaction=clear' rel='nofollow'>". $wpfp_options['clear'] . "</a>";
+    echo "</span>";
+    echo "<p>".$wpfp_options['cookie_warning']."</p>";
+}
+
 function wpfp_loading_img() {
     return "<img src='".WPFP_PATH."/img/loading.gif' alt='Loading' title='Loading' class='wpfp-hide wpfp-img' />";
 }
@@ -107,6 +157,38 @@ function wpfp_before_link_img() {
     }
 }
 
+function wpfp_clear_favorites() {
+    if (wpfp_get_cookie()):
+        foreach (wpfp_get_cookie() as $post_id => $val) {
+            wpfp_set_cookie($post_id, "");
+            wpfp_update_post_meta($post_id, -1);
+        }
+    endif;
+    if (is_user_logged_in()) {
+        $favorite_post_ids = wpfp_get_user_meta();
+        if ($favorite_post_ids):
+            foreach ($favorite_post_ids as $post_id) {
+                wpfp_update_post_meta($post_id, -1);
+            }
+        endif;
+        if (!delete_usermeta(wpfp_get_current_user_id(), WPFP_META_KEY)) {
+            return false;
+        }
+    }
+    return true;
+}
+function wpfp_remove_favorite($post_id) {
+    $a = true;
+    if (is_user_logged_in()) {
+        $user_favorites = wpfp_get_user_meta();
+        $user_favorites = array_diff($user_favorites, array($post_id));
+        $user_favorites = array_values($user_favorites);
+        $a = wpfp_update_user_meta($user_favorites);
+    }
+    if ($a) $a = wpfp_set_cookie($_REQUEST['postid'], "");
+    return $a;
+}
+
 function wpfp_content_filter($content) {
     if (is_page()):
         if (strpos($content,'{{wp-favorite-posts}}')!== false) {
@@ -120,11 +202,13 @@ function wpfp_content_filter($content) {
     #endif;
     return $content;
 }
+add_filter('the_content','wpfp_content_filter',7);
 
 function wpfp_add_js_script ( ) {
     echo '<link type="text/css" rel="stylesheet" href="' . WPFP_PATH . '/wpfp.css" />' . "\n";
     wp_enqueue_script( "wp-favroite-posts", WPFP_PATH . "/wpfp.js", array( 'jquery' ) );
 }
+add_action('wp_print_scripts', 'wpfp_add_js_script');
 
 function wpfp_init() {
     $wpfp_options = array();
@@ -145,7 +229,7 @@ function wpfp_init() {
     $wpfp_options['custom_before_image'] = '';
     add_option('wpfp_options', $wpfp_options, 'Favorite Posts Options');
 }
-
+add_action('activate_wp-favorite-posts/wp-favorite-posts.php', 'wpfp_init');
 
 function wpfp_config() { include('wpfp-admin.php'); }
 
@@ -153,6 +237,7 @@ function wpfp_config_page() {
     if ( function_exists('add_submenu_page') )
         add_submenu_page('plugins.php', __('Favorite Posts'), __('Favorite Posts'), 'manage_options', 'wp-favorite-posts', 'wpfp_config');
 }
+add_action('admin_menu', 'wpfp_config_page');
 
 function wpfp_update_user_meta($arr) {
     return update_usermeta(wpfp_get_current_user_id(),WPFP_META_KEY,$arr);
@@ -228,6 +313,7 @@ function wpfp_widget_init() {
     register_sidebar_widget('Most Favorited Posts', 'wpfp_widget_view');
     register_widget_control('Most Favorited Posts', 'wpfp_widget_control' );
 }
+add_action('widgets_init', 'wpfp_widget_init');
 
 //---\\
 function wpfp_get_cookie() {
