@@ -5,7 +5,7 @@ Tags: favorite, posts, favorites, cookie, wp-favorite-posts, reading list,
 favori yazılar, okuma listesi
 Requires at least: 2.0.2
 Tested up to: 2.8
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 
 Allows visitors to add favorite posts. This plugin use cookies for saving data so
 unregistered users can favorite a post.
