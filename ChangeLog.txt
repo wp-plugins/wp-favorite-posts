@@ -1,6 +1,7 @@
 ------------------
 WP Favorite Posts - ChangeLog
 http://wordpress.org/extend/plugins/wp-favorite-posts/
+http://nxsn.com
 ------------------
 
 Version 1.3.3
