@@ -3,6 +3,8 @@ $wpfp_options = get_option('wpfp_options');
 if ( isset($_POST['submit']) ) {
 	if ( function_exists('current_user_can') && !current_user_can('manage_options') )
 		die(__('Cheatin&#8217; uh?'));
+    if ($_POST['show_remove_link'] == 'show_remove_link') $_POST['added'] = 'show remove link';
+    if ($_POST['show_add_link'] == 'show_add_link') $_POST['removed'] = 'show add link';
 	$wpfp_options['add_favorite'] = addslashes($_POST['add_favorite']);
 	$wpfp_options['added'] = addslashes($_POST['added']);
 	$wpfp_options['remove_favorite'] = addslashes($_POST['remove_favorite']);
@@ -45,13 +47,13 @@ if ( isset($_POST['submit']) ) {
 		<th><?php _e("Text for add link", "wp-favorite-posts") ?></th><td><input type="text" name="add_favorite" value="<?php echo stripslashes($wpfp_options['add_favorite']); ?>" /></td>
 	</tr>
 	<tr>
-		<th><?php _e("Text for added", "wp-favorite-posts") ?></th><td><input type="text" name="added" value="<?php echo stripslashes($wpfp_options['added']); ?>" /></td>
+        <th><?php _e("Text for added", "wp-favorite-posts") ?></th><td><input type="checkbox"  <?php if ($wpfp_options['added'] == 'show remove link') echo "checked='cheked'"; ?> name="show_remove_link" onclick="jQuery('#added').val(''); jQuery('#added').toggle();" value="show_remove_link" />Show remove link<br /><input id="added" type="text" name="added" <?php if ($wpfp_options['added'] == 'show remove link') echo "style='display:none;'"; ?> value="<?php echo stripslashes($wpfp_options['added']); ?>" /></td>
 	</tr>
 	<tr>
 		<th><?php _e("Text for remove link", "wp-favorite-posts") ?></th><td><input type="text" name="remove_favorite" value="<?php echo stripslashes($wpfp_options['remove_favorite']); ?>" /></td>
 	</tr>
 	<tr>
-		<th><?php _e("Text for removed", "wp-favorite-posts") ?></th><td><input type="text" name="removed" value="<?php echo stripslashes($wpfp_options['removed']); ?>" /></td>
+        <th><?php _e("Text for removed", "wp-favorite-posts") ?></th><td><input type="checkbox" <?php if ($wpfp_options['removed'] == 'show add link') echo "checked='checked'"; ?> name="show_add_link" onclick="jQuery('#removed').val(''); jQuery('#removed').toggle();" value='show_add_link' />Show add link<br /><input id="removed" type="text" name="removed" <?php if ($wpfp_options['removed'] == 'show add link') echo "style='display:none;'"; ?> value="<?php echo stripslashes($wpfp_options['removed']); ?>" /></td>
 	</tr>
 	<tr>
 		<th><?php _e("Text for clear link", "wp-favorite-posts") ?></th><td><input type="text" name="clear" value="<?php echo stripslashes($wpfp_options['clear']); ?>" /></td>
@@ -105,6 +107,7 @@ if ( isset($_POST['submit']) ) {
             </label>
         </td>
     </tr>
+
 	<tr>
         <th><?php _e("Most favorited posts statics", "wp-favorite-posts") ?>*</th>
         <td>

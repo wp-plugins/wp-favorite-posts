@@ -5,7 +5,7 @@ Plugin URI: http://nxsn.com/my-projects/wp-favorite-posts-plugin/
 Description: Allows users to add favorite posts. This plugin use cookies for saving data so unregistered users can favorite a post. Put <code>&lt;?php wpfp_link(); ?&gt;</code> where ever you want on a single post. Then create a page which includes that text : <code>{{wp-favorite-posts}}</code> That's it!
 Version: 1.3.2
 Author: Hüseyin Berberoğlu
-Author URI: http://birazkisisel.com
+Author URI: http://nxsn.com
 
 */
 
@@ -28,15 +28,21 @@ Author URI: http://birazkisisel.com
 
 */
 
-include('wpfp-config.php');
+define('WPFP_PATH', get_settings('home') . '/wp-content/plugins/wp-favorite-posts');
+define('WPFP_META_KEY', "wpfp");
+define('WPFP_COOKIE_KEY', "wpfp");
+
+$ajax_mode = 1;
 
 function wp_favorite_posts() {
     $wpfp_options = wpfp_get_options();
 
     if (isset($_REQUEST['wpfpaction'])):
+        global $ajax_mode;
+        $ajax_mode = $_REQUEST['ajax'];
         if ($_REQUEST['wpfpaction'] == 'add') {
             if ($wpfp_options['opt_only_registered'] && !is_user_logged_in() ):
-                die($wpfp_options['text_only_registered']);
+                wpfp_die_or_go($wpfp_options['text_only_registered']);
             else:
                 if (is_user_logged_in()) {
                     $a = wpfp_add_to_usermeta($_REQUEST['postid']);
@@ -45,23 +51,47 @@ function wp_favorite_posts() {
                 }
                 if ($a) {
                     if ($wpfp_options['statics']) wpfp_update_post_meta($_REQUEST['postid'], 1);
-                    die($wpfp_options['added']);
+                    if ($wpfp_options['added'] == 'show remove link') {
+                        $str = wpfp_link(1, "remove");
+                        wpfp_die_or_go($str);
+                    } else {
+                        wpfp_die_or_go($wpfp_options['added']);
+                    }
                 }
-                else die("ERROR");
+                else wpfp_die_or_go("ERROR");
             endif;
         } else if ($_REQUEST['wpfpaction'] == 'remove') {
             if (wpfp_remove_favorite($_REQUEST['postid'])) {
                 if ($wpfp_options['statics']) wpfp_update_post_meta($_REQUEST['postid'], -1);
-                die($wpfp_options['removed']);
+                if ($wpfp_options['removed'] == 'show add link') {
+                    if ($_REQUEST['page']==1):
+                        $str = '';
+                    else:
+                        $str = wpfp_link(1, "add");
+                    endif;
+                    wpfp_die_or_go($str);
+                } else {
+                    wpfp_die_or_go($wpfp_options['removed']);
+                }
             }
-            else die("ERROR");
+            else wpfp_die_or_go("ERROR");
         } else if ($_REQUEST['wpfpaction'] == 'clear') {
-            if (wpfp_clear_favorites()) die($wpfp_options['cleared']);
-            else die("ERROR");
+            if (wpfp_clear_favorites()) wpfp_die_or_go($wpfp_options['cleared']);
+            else wpfp_die_or_go("ERROR");
         }
     endif;
 }
 add_action('template_redirect', 'wp_favorite_posts');
+
+function wpfp_die_or_go($str) {
+    global $ajax_mode;
+    if ($ajax_mode):
+        die($str);
+    else:
+        wp_redirect($_SERVER['HTTP_REFERER']);
+    endif;
+}
+
 
 function wpfp_add_to_usermeta($post_id) {
     $wpfp_favorites = array();
@@ -85,20 +115,29 @@ function wpfp_check_favorited($cid) {
     return false;
 }
 
-function wpfp_link($return = 0) {
+function wpfp_link($return = 0, $action = "") {
     global $post;
     $str = "<span class='wpfp-span'>";
     $str .= wpfp_before_link_img();
     $str .= wpfp_loading_img();
     $wpfp_options = wpfp_get_options();
-    if (wpfp_check_favorited($post->ID)):
-        $str .= "<a class='wpfp-link' href='?wpfpaction=remove&amp;postid=" . $post->ID ."' title='". $wpfp_options['remove_favorite'] ."' rel='nofollow'>". $wpfp_options['remove_favorite'] ."</a>";
+    if ($action == "remove"):
+        $str .= wpfp_link_html($post->ID, $wpfp_options['remove_favorite'], "remove");
+    elseif ($action == "add"):
+        $str .= wpfp_link_html($post->ID, $wpfp_options['add_favorite'], "add");
+    elseif (wpfp_check_favorited($post->ID)):
+        $str .= wpfp_link_html($post->ID, $wpfp_options['remove_favorite'], "remove");
     else:
-        $str .= "<a class='wpfp-link' href='?wpfpaction=add&amp;postid=". $post->ID . "' title='". $wpfp_options['add_favorite'] ."' rel='nofollow'>". $wpfp_options['add_favorite'] ."</a>";
+        $str .= wpfp_link_html($post->ID, $wpfp_options['add_favorite'], "add");
     endif;
     $str .= "</span>";
     if ($return) { return $str; } else { echo $str; }
 }
+
+function wpfp_link_html($post_id, $opt, $action) {
+    return "<a class='wpfp-link' href='?wpfpaction=".$action."&amp;postid=". $post_id . "' title='". $opt ."' rel='nofollow'>". $opt ."</a>";
+}
+
 function wpfp_get_users_favorites() {
     $favorite_post_ids = array();
 
@@ -126,7 +165,7 @@ function wpfp_list_favorite_posts($before = "<li>", $after = "</li>") {
             $p = get_post($post_id);
             echo $before;
             echo "<a href='".get_permalink($post_id)."' title='". $p->post_title ."'>" . $p->post_title . "</a> ";
-            echo "[<a class='wpfp-link' href='?wpfpaction=remove&amp;postid=". $post_id ."' title='".$wpfp_options['rem']."' rel='nofollow'>".$wpfp_options['rem']."</a>]";
+            echo "[<a class='wpfp-link' href='?wpfpaction=remove&amp;page=1&amp;postid=". $post_id ."' title='".$wpfp_options['rem']."' rel='nofollow'>".$wpfp_options['rem']."</a>]";
             echo $after;
         }
     else:
@@ -139,7 +178,9 @@ function wpfp_list_favorite_posts($before = "<li>", $after = "</li>") {
     echo wpfp_loading_img();
     echo "<a class='wpfp-link' href='?wpfpaction=clear' rel='nofollow'>". $wpfp_options['clear'] . "</a>";
     echo "</span>";
-    echo "<p>".$wpfp_options['cookie_warning']."</p>";
+    if (!is_user_logged_in()):
+        echo "<p>".$wpfp_options['cookie_warning']."</p>";
+    endif;
 }
 
 function wpfp_loading_img() {

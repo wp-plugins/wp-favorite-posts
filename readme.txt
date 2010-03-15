@@ -1,8 +1,7 @@
 === WP Favorite Posts ===
 Contributors: Hüseyin Berberoğlu
 Donate link: http://nxsn.com.com/my-projects/wp-favorite-posts-plugin
-Tags: favorite, posts, favorites, cookie, wp-favorite-posts, reading list,
-favori yazılar, okuma listesi
+Tags: favorite posts, favorite, favourite, posts, favorites, wp-favorite-posts, reading list
 Requires at least: 2.0.2
 Tested up to: 2.8
 Stable tag: 1.3.2
