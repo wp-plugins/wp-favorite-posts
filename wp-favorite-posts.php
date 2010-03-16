@@ -52,7 +52,7 @@ function wp_favorite_posts() {
                 if ($a) {
                     if ($wpfp_options['statics']) wpfp_update_post_meta($_REQUEST['postid'], 1);
                     if ($wpfp_options['added'] == 'show remove link') {
-                        $str = wpfp_link(1, "remove");
+                        $str = wpfp_link(1, "remove", 0);
                         wpfp_die_or_go($str);
                     } else {
                         wpfp_die_or_go($wpfp_options['added']);
@@ -67,7 +67,7 @@ function wp_favorite_posts() {
                     if ($_REQUEST['page']==1):
                         $str = '';
                     else:
-                        $str = wpfp_link(1, "add");
+                        $str = wpfp_link(1, "add", 0);
                     endif;
                     wpfp_die_or_go($str);
                 } else {
@@ -115,9 +115,10 @@ function wpfp_check_favorited($cid) {
     return false;
 }
 
-function wpfp_link($return = 0, $action = "") {
+function wpfp_link($return = 0, $action = "", $show_span = 1) {
     global $post;
-    $str = "<span class='wpfp-span'>";
+    if ($show_span)
+        $str = "<span class='wpfp-span'>";
     $str .= wpfp_before_link_img();
     $str .= wpfp_loading_img();
     $wpfp_options = wpfp_get_options();
@@ -130,7 +131,8 @@ function wpfp_link($return = 0, $action = "") {
     else:
         $str .= wpfp_link_html($post->ID, $wpfp_options['add_favorite'], "add");
     endif;
-    $str .= "</span>";
+    if ($show_span)
+        $str .= "</span>";
     if ($return) { return $str; } else { echo $str; }
 }
 
