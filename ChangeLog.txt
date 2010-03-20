@@ -4,6 +4,12 @@ http://wordpress.org/extend/plugins/wp-favorite-posts/
 http://nxsn.com
 ------------------
 
+Version 1.4
+-----------
+2010-03-20 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Override page template if wpfp-page-template.php exists on template
+	directory.
+
 Version 1.3.5
 -----------
 2010-03-17 Hüseyin Berberoğlu <hberberoglu@gmail.com>
