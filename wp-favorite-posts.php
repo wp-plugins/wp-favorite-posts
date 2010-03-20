@@ -157,7 +157,7 @@ function wpfp_get_users_favorites() {
     return $favorite_post_ids;
 }
 
-function wpfp_list_favorite_posts($before = "<li>", $after = "</li>") {
+function wpfp_list_favorite_posts() {
     $wpfp_options = wpfp_get_options();
     $favorite_post_ids = wpfp_get_users_favorites();
     # list favorites
