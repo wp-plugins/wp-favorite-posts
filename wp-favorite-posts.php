@@ -229,6 +229,11 @@ function wpfp_content_filter($content) {
     return $content;
 }
 add_filter('the_content','wpfp_content_filter',7);
+function wpfp_shortcode_func() {
+    wpfp_list_favorite_posts();
+}
+add_shortcode('wp-favorite-posts', 'wpfp_shortcode_func');
+
 
 function wpfp_add_js_script ( ) {
     echo '<link type="text/css" rel="stylesheet" href="' . WPFP_PATH . '/wpfp.css" />' . "\n";
