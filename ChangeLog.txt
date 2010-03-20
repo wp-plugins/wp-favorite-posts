@@ -9,6 +9,7 @@ Version 1.4
 2010-03-20 Hüseyin Berberoğlu <hberberoglu@gmail.com>
 	* Override page template if wpfp-page-template.php exists on template
 	directory.
+	* Add [wp-favorite-post] shortcode.
 
 Version 1.3.5
 -----------
