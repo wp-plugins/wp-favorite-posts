@@ -9,7 +9,8 @@ Version 1.4
 2010-03-20 Hüseyin Berberoğlu <hberberoglu@gmail.com>
 	* Override page template if wpfp-page-template.php exists on template
 	directory.
-	* Add [wp-favorite-post] shortcode.
+	* Add [wp-favorite-posts] shortcode. Use shortcode instead of
+	{{wp-favorite-posts}}
 
 Version 1.3.5
 -----------
