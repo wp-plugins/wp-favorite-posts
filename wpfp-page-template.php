@@ -1,5 +1,5 @@
 <?php
-    echo "<span class='wpfp-span'>";
+    echo "<div class='wpfp-span'>";
     echo "<ul>";
     if ($favorite_post_ids):
         foreach ($favorite_post_ids as $post_id) {
@@ -18,7 +18,7 @@
     echo wpfp_before_link_img();
     echo wpfp_loading_img();
     echo "<a class='wpfp-link' href='?wpfpaction=clear' rel='nofollow'>". $wpfp_options['clear'] . "</a>";
-    echo "</span>";
+    echo "</div>";
     if (!is_user_logged_in()):
         echo "<p>".$wpfp_options['cookie_warning']."</p>";
     endif;
