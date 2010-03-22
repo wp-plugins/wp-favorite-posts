@@ -141,8 +141,12 @@ function wpfp_link_html($post_id, $opt, $action) {
     return "<a class='wpfp-link' href='?wpfpaction=".$action."&amp;postid=". $post_id . "' title='". $opt ."' rel='nofollow'>". $opt ."</a>";
 }
 
-function wpfp_get_users_favorites() {
+function wpfp_get_users_favorites($user = "") {
     $favorite_post_ids = array();
+
+    if (!empty($user)):
+        return wpfp_get_user_meta($user);
+    endif;
 
     # collect favorites from cookie and if user is logged in from database.
     if (is_user_logged_in()):
@@ -157,10 +161,12 @@ function wpfp_get_users_favorites() {
     return $favorite_post_ids;
 }
 
-function wpfp_list_favorite_posts() {
+function wpfp_list_favorite_posts($args = array()) {
+    $user = $_REQUEST['user'];
+    extract($args);
     $wpfp_options = wpfp_get_options();
-    $favorite_post_ids = wpfp_get_users_favorites();
-    # list favorites
+    $favorite_post_ids = wpfp_get_users_favorites($user);
+
     if (@file_exists(TEMPLATEPATH.'/wpfp-page-template.php')):
         include(TEMPLATEPATH.'/wpfp-page-template.php');
     else:
@@ -361,8 +367,14 @@ function wpfp_get_user_id() {
     return $current_user->ID;
 }
 
-function wpfp_get_user_meta() {
-    return get_usermeta(wpfp_get_user_id(), WPFP_META_KEY);
+function wpfp_get_user_meta($user = "") {
+    if (!empty($user)):
+        $userdata = get_userdatabylogin($user);
+        $user_id = $userdata->ID;
+        return get_usermeta($user_id, WPFP_META_KEY);
+    else:
+        return get_usermeta(wpfp_get_user_id(), WPFP_META_KEY);
+    endif;
 }
 
 function wpfp_get_post_meta($post_id) {
