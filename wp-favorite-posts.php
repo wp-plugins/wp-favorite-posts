@@ -197,7 +197,7 @@ function wpfp_clear_favorites() {
                 wpfp_update_post_meta($post_id, -1);
             }
         endif;
-        if (!delete_usermeta(wpfp_get_current_user_id(), WPFP_META_KEY)) {
+        if (!delete_usermeta(wpfp_get_user_id(), WPFP_META_KEY)) {
             return false;
         }
     }
@@ -271,7 +271,7 @@ function wpfp_config_page() {
 add_action('admin_menu', 'wpfp_config_page');
 
 function wpfp_update_user_meta($arr) {
-    return update_usermeta(wpfp_get_current_user_id(),WPFP_META_KEY,$arr);
+    return update_usermeta(wpfp_get_user_id(),WPFP_META_KEY,$arr);
 }
 
 function wpfp_update_post_meta($post_id, $val) {
@@ -355,14 +355,14 @@ function wpfp_get_options() {
    return get_option('wpfp_options');
 }
 
-function wpfp_get_current_user_id() {
+function wpfp_get_user_id() {
     global $current_user;
     get_currentuserinfo();
     return $current_user->ID;
 }
 
 function wpfp_get_user_meta() {
-    return get_usermeta(wpfp_get_current_user_id(), WPFP_META_KEY);
+    return get_usermeta(wpfp_get_user_id(), WPFP_META_KEY);
 }
 
 function wpfp_get_post_meta($post_id) {
