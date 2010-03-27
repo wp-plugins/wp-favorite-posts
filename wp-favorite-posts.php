@@ -31,6 +31,7 @@ Author URI: http://nxsn.com
 
 define('WPFP_PATH', get_settings('home') . '/wp-content/plugins/wp-favorite-posts');
 define('WPFP_META_KEY', "wpfp_favorites");
+define('WPFP_USER_OPTION_KEY', "wpfp_useroptions");
 define('WPFP_COOKIE_KEY', "wp-favorite-posts");
 
 $ajax_mode = 1;
@@ -161,11 +162,17 @@ function wpfp_get_users_favorites($user = "") {
     return $favorite_post_ids;
 }
 
-function wpfp_list_favorite_posts($args = array()) {
+function wpfp_list_favorite_posts( $args = array() ) {
     $user = $_REQUEST['user'];
     extract($args);
     $wpfp_options = wpfp_get_options();
-    $favorite_post_ids = wpfp_get_users_favorites($user);
+    if (!empty($user)):
+        if (!wpfp_is_user_favlist_public($user)):
+            $favorite_post_ids = wpfp_get_users_favorites($user);
+        endif;
+    else:
+        $favorite_post_ids = wpfp_get_users_favorites();
+    endif;
 
     if (@file_exists(TEMPLATEPATH.'/wpfp-page-template.php')):
         include(TEMPLATEPATH.'/wpfp-page-template.php');
@@ -386,4 +393,41 @@ function wpfp_get_post_meta($post_id) {
 function wpfp_set_cookie($post_id, $str) {
     $expire = time()+60*60*24*30;
     return setcookie("wp-favorite-posts[$post_id]", $str, $expire, "/");
+}
+function wpfp_is_user_favlist_public($user) {
+    $user_opts = wpfp_get_user_options($user);
+    if ($user_opts['list_is_public'])
+        return true;
+    else
+        return false;
+}
+
+function wpfp_get_user_options($user) {
+    $userdata = get_userdatabylogin($user);
+    $user_id = $userdata->ID;
+    return get_usermeta($user_id, WPFP_USER_OPTION_KEY);
+}
+function wpfp_is_user_can_edit() {
+    if ($_REQUEST['user'])
+        return false;
+    return true;
+}
+function wpfp_remove_favorite_link($post_id) {
+    if (wpfp_is_user_can_edit()) {
+        $wpfp_options = wpfp_get_options();
+        echo "[<a class='wpfp-link' href='?wpfpaction=remove&amp;page=1&amp;postid=". $post_id ."' title='".$wpfp_options['rem']."' rel='nofollow'>".$wpfp_options['rem']."</a>]";
+    }
+}
+function wpfp_clear_list_link() {
+    if (wpfp_is_user_can_edit()) {
+        $wpfp_options = wpfp_get_options();
+        echo wpfp_before_link_img();
+        echo wpfp_loading_img();
+        echo "<a class='wpfp-link' href='?wpfpaction=clear' rel='nofollow'>". $wpfp_options['clear'] . "</a>";
+    }
+}
+function wpfp_cookie_warning() {
+    if (!is_user_logged_in() && !isset($_GET['user']) ):
+        echo "<p>".$wpfp_options['cookie_warning']."</p>";
+    endif;
 }

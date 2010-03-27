@@ -1,12 +1,24 @@
 <?php
     echo "<div class='wpfp-span'>";
+    if (!empty($user)):
+        if (!wpfp_is_user_favlist_public($user)):
+            echo "$user's tarif defteri.";
+        else:
+            echo "$user's list is not public.";
+        endif;
+    endif;
+
+    if ($wpfp_before):
+        echo "<p>".$wpfp_before."</p>";
+    endif;
+
     echo "<ul>";
     if ($favorite_post_ids):
         foreach ($favorite_post_ids as $post_id) {
             $p = get_post($post_id);
             echo "<li>";
             echo "<a href='".get_permalink($post_id)."' title='". $p->post_title ."'>" . $p->post_title . "</a> ";
-            echo "[<a class='wpfp-link' href='?wpfpaction=remove&amp;page=1&amp;postid=". $post_id ."' title='".$wpfp_options['rem']."' rel='nofollow'>".$wpfp_options['rem']."</a>]";
+            wpfp_remove_favorite_link($post_id);
             echo "</li>";
         }
     else:
@@ -15,11 +27,7 @@
         echo "</li>";
     endif;
     echo "</ul>";
-    echo wpfp_before_link_img();
-    echo wpfp_loading_img();
-    echo "<a class='wpfp-link' href='?wpfpaction=clear' rel='nofollow'>". $wpfp_options['clear'] . "</a>";
+    wpfp_clear_list_link();
     echo "</div>";
-    if (!is_user_logged_in()):
-        echo "<p>".$wpfp_options['cookie_warning']."</p>";
-    endif;
+    wpfp_cookie_warning();
 ?>
