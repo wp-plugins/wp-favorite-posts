@@ -415,7 +415,8 @@ function wpfp_is_user_can_edit() {
 function wpfp_remove_favorite_link($post_id) {
     if (wpfp_is_user_can_edit()) {
         $wpfp_options = wpfp_get_options();
-        echo "[<a class='wpfp-link' href='?wpfpaction=remove&amp;page=1&amp;postid=". $post_id ."' title='".$wpfp_options['rem']."' rel='nofollow'>".$wpfp_options['rem']."</a>]";
+        $class = 'wpfp-link remove-parent';
+        echo "[<a id='rem_$post_id' class='$class' href='?wpfpaction=remove&amp;page=1&amp;postid=". $post_id ."' title='".$wpfp_options['rem']."' rel='nofollow'>".$wpfp_options['rem']."</a>]";
     }
 }
 function wpfp_clear_list_link() {
