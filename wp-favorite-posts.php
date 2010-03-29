@@ -43,40 +43,9 @@ function wp_favorite_posts() {
         global $ajax_mode;
         $ajax_mode = $_REQUEST['ajax'];
         if ($_REQUEST['wpfpaction'] == 'add') {
-            if ($wpfp_options['opt_only_registered'] && !is_user_logged_in() ):
-                wpfp_die_or_go($wpfp_options['text_only_registered']);
-            else:
-                if (is_user_logged_in()) {
-                    $a = wpfp_add_to_usermeta($_REQUEST['postid']);
-                } else {
-                    $a = wpfp_set_cookie($_REQUEST['postid'], "added");
-                }
-                if ($a) {
-                    if ($wpfp_options['statics']) wpfp_update_post_meta($_REQUEST['postid'], 1);
-                    if ($wpfp_options['added'] == 'show remove link') {
-                        $str = wpfp_link(1, "remove", 0);
-                        wpfp_die_or_go($str);
-                    } else {
-                        wpfp_die_or_go($wpfp_options['added']);
-                    }
-                }
-                else wpfp_die_or_go("ERROR");
-            endif;
+            wpfp_add_favorite();
         } else if ($_REQUEST['wpfpaction'] == 'remove') {
-            if (wpfp_remove_favorite($_REQUEST['postid'])) {
-                if ($wpfp_options['statics']) wpfp_update_post_meta($_REQUEST['postid'], -1);
-                if ($wpfp_options['removed'] == 'show add link') {
-                    if ($_REQUEST['page']==1):
-                        $str = '';
-                    else:
-                        $str = wpfp_link(1, "add", 0);
-                    endif;
-                    wpfp_die_or_go($str);
-                } else {
-                    wpfp_die_or_go($wpfp_options['removed']);
-                }
-            }
-            else wpfp_die_or_go("ERROR");
+            wpfp_remove_favorite();
         } else if ($_REQUEST['wpfpaction'] == 'clear') {
             if (wpfp_clear_favorites()) wpfp_die_or_go($wpfp_options['cleared']);
             else wpfp_die_or_go("ERROR");
@@ -84,6 +53,49 @@ function wp_favorite_posts() {
     endif;
 }
 add_action('template_redirect', 'wp_favorite_posts');
+
+function wpfp_add_favorite($post_id = "") {
+    $wpfp_options = wpfp_get_options();
+    if (!$post_id) $post_id = $_REQUEST['postid'];
+    if ($wpfp_options['opt_only_registered'] && !is_user_logged_in() ):
+        wpfp_die_or_go($wpfp_options['text_only_registered']);
+    else:
+        if (is_user_logged_in()) {
+            $a = wpfp_add_to_usermeta($post_id);
+        } else {
+            $a = wpfp_set_cookie($post_id, "added");
+        }
+        if ($a) {
+            if ($wpfp_options['statics']) wpfp_update_post_meta($post_id, 1);
+            if ($wpfp_options['added'] == 'show remove link') {
+                $str = wpfp_link(1, "remove", 0);
+                wpfp_die_or_go($str);
+            } else {
+                wpfp_die_or_go($wpfp_options['added']);
+            }
+        }
+        else return false;
+    endif;
+}
+
+function wpfp_remove_favorite($post_id = "") {
+    $wpfp_options = wpfp_get_options();
+    if (!$post_id) $post_id = $_REQUEST['postid'];
+    if (wpfp_do_remove_favorite($post_id)) {
+        if ($wpfp_options['statics']) wpfp_update_post_meta($post_id, -1);
+        if ($wpfp_options['removed'] == 'show add link') {
+            if ($_REQUEST['page']==1):
+                $str = '';
+            else:
+                $str = wpfp_link(1, "add", 0);
+            endif;
+            wpfp_die_or_go($str);
+        } else {
+            wpfp_die_or_go($wpfp_options['removed']);
+        }
+    }
+    else return false;;
+}
 
 function wpfp_die_or_go($str) {
     global $ajax_mode;
@@ -93,7 +105,6 @@ function wpfp_die_or_go($str) {
         wp_redirect($_SERVER['HTTP_REFERER']);
     endif;
 }
-
 
 function wpfp_add_to_usermeta($post_id) {
     $wpfp_favorites = array();
@@ -216,7 +227,7 @@ function wpfp_clear_favorites() {
     }
     return true;
 }
-function wpfp_remove_favorite($post_id) {
+function wpfp_do_remove_favorite($post_id) {
     $a = true;
     if (is_user_logged_in()) {
         $user_favorites = wpfp_get_user_meta();
