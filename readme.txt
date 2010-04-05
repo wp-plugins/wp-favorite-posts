@@ -1,11 +1,11 @@
 === WP Favorite Posts ===
-Contributors: Hüseyin Berberoğlu
+Contributors: Huseyin Berberoglu
 Donate link: http://nxsn.com.com/my-projects/wp-favorite-posts-plugin
 Tags: favorite posts, favorite, favourite, posts, favorites,
 wp-favorite-posts, reading list, post list, post lists, lists
 Requires at least: 2.0.2
 Tested up to: 2.9
-Stable tag: 1.4
+Stable tag: 1.4.1
 
 Allows visitors to add favorite posts. This plugin use cookies for saving data so
 unregistered users can favorite a post.
