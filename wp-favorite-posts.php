@@ -73,12 +73,13 @@ function wpfp_add_favorite($post_id = "") {
     }
 }
 function wpfp_do_add_to_list($post_id) {
+    if (wpfp_check_favorited($post_id))
+        return false;
     if (is_user_logged_in()) {
         return wpfp_add_to_usermeta($post_id);
     } else {
         return wpfp_set_cookie($post_id, "added");
     }
-    return false;
 }
 
 function wpfp_remove_favorite($post_id = "") {
