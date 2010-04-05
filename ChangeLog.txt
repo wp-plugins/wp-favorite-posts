@@ -3,6 +3,13 @@ WP Favorite Posts - ChangeLog
 http://wordpress.org/extend/plugins/wp-favorite-posts/
 http://nxsn.com
 ------------------
+Version 1.4.1
+-----------
+2010-04-05 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* code refactor, add do_action for add and remove to list (#225575)
+
+2010-03-29 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Fix plugin path, fixes image loading problems (#222902)
 
 Version 1.4
 -----------
