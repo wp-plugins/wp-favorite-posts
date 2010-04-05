@@ -56,32 +56,37 @@ add_action('template_redirect', 'wp_favorite_posts');
 
 function wpfp_add_favorite($post_id = "") {
     $wpfp_options = wpfp_get_options();
-    if (!$post_id) $post_id = $_REQUEST['postid'];
-    if ($wpfp_options['opt_only_registered'] && !is_user_logged_in() ):
+    if ( empty($post_id) ) $post_id = $_REQUEST['postid'];
+    if ($wpfp_options['opt_only_registered'] && !is_user_logged_in() )
         wpfp_die_or_go($wpfp_options['text_only_registered']);
-    else:
-        if (is_user_logged_in()) {
-            $a = wpfp_add_to_usermeta($post_id);
+
+    if (wpfp_do_add_to_list($post_id)) {
+        // added, now?
+        do_action('wpfp_after_add', $post_id);
+        if ($wpfp_options['statics']) wpfp_update_post_meta($post_id, 1);
+        if ($wpfp_options['added'] == 'show remove link') {
+            $str = wpfp_link(1, "remove", 0);
+            wpfp_die_or_go($str);
         } else {
-            $a = wpfp_set_cookie($post_id, "added");
+            wpfp_die_or_go($wpfp_options['added']);
         }
-        if ($a) {
-            if ($wpfp_options['statics']) wpfp_update_post_meta($post_id, 1);
-            if ($wpfp_options['added'] == 'show remove link') {
-                $str = wpfp_link(1, "remove", 0);
-                wpfp_die_or_go($str);
-            } else {
-                wpfp_die_or_go($wpfp_options['added']);
-            }
-        }
-        else return false;
-    endif;
+    }
+}
+function wpfp_do_add_to_list($post_id) {
+    if (is_user_logged_in()) {
+        return wpfp_add_to_usermeta($post_id);
+    } else {
+        return wpfp_set_cookie($post_id, "added");
+    }
+    return false;
 }
 
 function wpfp_remove_favorite($post_id = "") {
     $wpfp_options = wpfp_get_options();
-    if (!$post_id) $post_id = $_REQUEST['postid'];
+    if (empty($post_id)) $post_id = $_REQUEST['postid'];
     if (wpfp_do_remove_favorite($post_id)) {
+        // removed, now?
+        do_action('wpfp_after_remove', $post_id);
         if ($wpfp_options['statics']) wpfp_update_post_meta($post_id, -1);
         if ($wpfp_options['removed'] == 'show add link') {
             if ($_REQUEST['page']==1):
