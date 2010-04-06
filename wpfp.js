@@ -15,7 +15,7 @@ jQuery(document).ready( function($) {
         }
     );
     if (dis.hasClass('remove-parent')) {
-        dis.parent().fadeOut();
+        dis.parents("li").fadeOut();
     }
     return false;
   });
