@@ -3,6 +3,11 @@ WP Favorite Posts - ChangeLog
 http://wordpress.org/extend/plugins/wp-favorite-posts/
 http://nxsn.com
 ------------------
+Version 1.4.3
+-----------
+	* Fix: same remove link for all posts on index
+	* better wpfp.js: remove li which on favorites page.
+
 Version 1.4.1
 -----------
 2010-04-05 Hüseyin Berberoğlu <hberberoglu@gmail.com>
