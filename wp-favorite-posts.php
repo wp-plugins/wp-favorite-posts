@@ -64,7 +64,7 @@ function wpfp_add_favorite($post_id = "") {
         do_action('wpfp_after_add', $post_id);
         if ($wpfp_options['statics']) wpfp_update_post_meta($post_id, 1);
         if ($wpfp_options['added'] == 'show remove link') {
-            $str = wpfp_link(1, "remove", 0);
+            $str = wpfp_link(1, "remove", 0, array( 'post_id' => $post_id ) );
             wpfp_die_or_go($str);
         } else {
             wpfp_die_or_go($wpfp_options['added']);
@@ -92,7 +92,7 @@ function wpfp_remove_favorite($post_id = "") {
             if ($_REQUEST['page']==1):
                 $str = '';
             else:
-                $str = wpfp_link(1, "add", 0);
+                $str = wpfp_link(1, "add", 0, array( 'post_id' => $post_id ) );
             endif;
             wpfp_die_or_go($str);
         } else {
@@ -133,21 +133,23 @@ function wpfp_check_favorited($cid) {
     return false;
 }
 
-function wpfp_link($return = 0, $action = "", $show_span = 1) {
+function wpfp_link( $return = 0, $action = "", $show_span = 1, $args = array() ) {
     global $post;
+    $post_id = $post->ID;
+    extract($args);
     if ($show_span)
         $str = "<span class='wpfp-span'>";
     $str .= wpfp_before_link_img();
     $str .= wpfp_loading_img();
     $wpfp_options = wpfp_get_options();
     if ($action == "remove"):
-        $str .= wpfp_link_html($post->ID, $wpfp_options['remove_favorite'], "remove");
+        $str .= wpfp_link_html($post_id, $wpfp_options['remove_favorite'], "remove");
     elseif ($action == "add"):
-        $str .= wpfp_link_html($post->ID, $wpfp_options['add_favorite'], "add");
-    elseif (wpfp_check_favorited($post->ID)):
-        $str .= wpfp_link_html($post->ID, $wpfp_options['remove_favorite'], "remove");
+        $str .= wpfp_link_html($post_id, $wpfp_options['add_favorite'], "add");
+    elseif (wpfp_check_favorited($post_id)):
+        $str .= wpfp_link_html($post_id, $wpfp_options['remove_favorite'], "remove");
     else:
-        $str .= wpfp_link_html($post->ID, $wpfp_options['add_favorite'], "add");
+        $str .= wpfp_link_html($post_id, $wpfp_options['add_favorite'], "add");
     endif;
     if ($show_span)
         $str .= "</span>";
