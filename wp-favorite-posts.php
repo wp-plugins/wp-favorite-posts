@@ -73,7 +73,7 @@ function wpfp_add_favorite($post_id = "") {
 }
 function wpfp_do_add_to_list($post_id) {
     if (wpfp_check_favorited($post_id))
-        return false;
+        return true;
     if (is_user_logged_in()) {
         return wpfp_add_to_usermeta($post_id);
     } else {
@@ -235,6 +235,9 @@ function wpfp_clear_favorites() {
     return true;
 }
 function wpfp_do_remove_favorite($post_id) {
+    if (!wpfp_check_favorited($post_id))
+        return true;
+
     $a = true;
     if (is_user_logged_in()) {
         $user_favorites = wpfp_get_user_meta();
