@@ -7,7 +7,7 @@ Version 1.4.3
 -----------
 2010-04-13 Hüseyin Berberoğlu <hberberoglu@gmail.com>
 	* Admin can write html codes to label settings (on admin page)
-	* Added wpfp_link_html filter
+	* Added "wpfp_link_html" and "wpfp_remove_favorite_link" filters.
 
 Version 1.4.3
 -----------
