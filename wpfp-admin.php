@@ -42,10 +42,10 @@ if ( isset($_POST['submit']) ) {
     });
 </script>
 <div class="postbox">
-    <div title="Açmak/kapamak için tıklayın" class="handlediv">
+    <div title="<?php _e("Click to open/close", "wp-favorite-posts"); ?>" class="handlediv">
       <br>
     </div>
-    <h3 class="hndle"><span>Do you use it ?</span></h3>
+    <h3 class="hndle"><span><?php _e("Do you use it ?", "wp-favorite-posts"); ?></span></h3>
     <div class="inside" style="display: block;">
         <img src="../wp-content/plugins/wp-favorite-posts/img/icon_coffee.png" alt="buy me a coffee" style=" margin: 5px; float:left;" />
         <p>Hi! I'm <a href="http://nxsn.com?f=wpfp" target="_blank" title="Huseyin Berberoglu">Huseyin Berberoglu</a>, developer of this plugin.</p>
@@ -63,10 +63,10 @@ if ( isset($_POST['submit']) ) {
 
 
 <div class="postbox">
-    <div title="Açmak/kapamak için tıklayın" class="handlediv">
+    <div title="<?php _e("Click to open/close", "wp-favorite-posts"); ?>" class="handlediv">
       <br>
     </div>
-    <h3 class="hndle"><span>Options</span></h3>
+    <h3 class="hndle"><span><?php _e("Options", "wp-favorite-posts"); ?></span></h3>
     <div class="inside" style="display: block;">
 
         <table class="form-table">
@@ -184,7 +184,7 @@ if ( isset($_POST['submit']) ) {
     </div>
 </div>
 <div class="postbox">
-    <div title="Açmak/kapamak için tıklayın" class="handlediv">
+    <div title="<?php _e("Click to open/close", "wp-favorite-posts"); ?>" class="handlediv">
       <br>
     </div>
     <h3 class="hndle"><span><?php _e('Help', 'wp-favorite-posts'); ?></span></h3>
