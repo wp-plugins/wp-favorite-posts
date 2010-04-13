@@ -5,6 +5,10 @@ http://nxsn.com
 ------------------
 Version 1.4.3
 -----------
+	* Admin can write html codes to label settings (on admin page)
+
+Version 1.4.3
+-----------
 	* Fix: same remove link for all posts on index
 	* better wpfp.js: remove li which on favorites page.
 
