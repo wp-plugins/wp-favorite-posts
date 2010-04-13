@@ -5,20 +5,20 @@ if ( isset($_POST['submit']) ) {
 		die(__('Cheatin&#8217; uh?'));
     if ($_POST['show_remove_link'] == 'show_remove_link') $_POST['added'] = 'show remove link';
     if ($_POST['show_add_link'] == 'show_add_link') $_POST['removed'] = 'show add link';
-	$wpfp_options['add_favorite'] = addslashes($_POST['add_favorite']);
-	$wpfp_options['added'] = addslashes($_POST['added']);
-	$wpfp_options['remove_favorite'] = addslashes($_POST['remove_favorite']);
-	$wpfp_options['removed'] = addslashes($_POST['removed']);
-	$wpfp_options['clear'] = addslashes($_POST['clear']);
-	$wpfp_options['cleared'] = addslashes($_POST['cleared']);
-	$wpfp_options['favorites_empty'] = addslashes($_POST['favorites_empty']);
-	$wpfp_options['rem'] = addslashes($_POST['rem']);
-	$wpfp_options['cookie_warning'] = addslashes($_POST['cookie_warning']);
-	$wpfp_options['opt_only_registered'] = addslashes($_POST['opt_only_registered']);
-	$wpfp_options['text_only_registered'] = addslashes($_POST['text_only_registered']);
-	$wpfp_options['statics'] = addslashes($_POST['statics']);
-	$wpfp_options['before_image'] = addslashes($_POST['before_image']);
-	$wpfp_options['custom_before_image'] = addslashes($_POST['custom_before_image']);
+	$wpfp_options['add_favorite'] = htmlspecialchars($_POST['add_favorite']);
+	$wpfp_options['added'] = htmlspecialchars($_POST['added']);
+	$wpfp_options['remove_favorite'] = htmlspecialchars($_POST['remove_favorite']);
+	$wpfp_options['removed'] = htmlspecialchars($_POST['removed']);
+	$wpfp_options['clear'] = htmlspecialchars($_POST['clear']);
+	$wpfp_options['cleared'] = htmlspecialchars($_POST['cleared']);
+	$wpfp_options['favorites_empty'] = htmlspecialchars($_POST['favorites_empty']);
+	$wpfp_options['rem'] = htmlspecialchars($_POST['rem']);
+	$wpfp_options['cookie_warning'] = htmlspecialchars($_POST['cookie_warning']);
+	$wpfp_options['opt_only_registered'] = htmlspecialchars($_POST['opt_only_registered']);
+	$wpfp_options['text_only_registered'] = htmlspecialchars($_POST['text_only_registered']);
+	$wpfp_options['statics'] = htmlspecialchars($_POST['statics']);
+	$wpfp_options['before_image'] = htmlspecialchars($_POST['before_image']);
+	$wpfp_options['custom_before_image'] = htmlspecialchars($_POST['custom_before_image']);
 
 	update_option('wpfp_options', $wpfp_options);
 }

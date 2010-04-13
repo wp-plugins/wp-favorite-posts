@@ -46,7 +46,7 @@ function wp_favorite_posts() {
         } else if ($_REQUEST['wpfpaction'] == 'remove') {
             wpfp_remove_favorite();
         } else if ($_REQUEST['wpfpaction'] == 'clear') {
-            if (wpfp_clear_favorites()) wpfp_die_or_go($wpfp_options['cleared']);
+            if (wpfp_clear_favorites()) wpfp_die_or_go(wpfp_get_option('cleared'));
             else wpfp_die_or_go("ERROR");
         }
     endif;
@@ -56,18 +56,18 @@ add_action('template_redirect', 'wp_favorite_posts');
 function wpfp_add_favorite($post_id = "") {
     $wpfp_options = wpfp_get_options();
     if ( empty($post_id) ) $post_id = $_REQUEST['postid'];
-    if ($wpfp_options['opt_only_registered'] && !is_user_logged_in() )
-        wpfp_die_or_go($wpfp_options['text_only_registered']);
+    if (wpfp_get_option('opt_only_registered') && !is_user_logged_in() )
+        wpfp_die_or_go(wpfp_get_option('text_only_registered') );
 
     if (wpfp_do_add_to_list($post_id)) {
         // added, now?
         do_action('wpfp_after_add', $post_id);
-        if ($wpfp_options['statics']) wpfp_update_post_meta($post_id, 1);
-        if ($wpfp_options['added'] == 'show remove link') {
+        if (wpfp_get_option('statics')) wpfp_update_post_meta($post_id, 1);
+        if (wpfp_get_option('added') == 'show remove link') {
             $str = wpfp_link(1, "remove", 0, array( 'post_id' => $post_id ) );
             wpfp_die_or_go($str);
         } else {
-            wpfp_die_or_go($wpfp_options['added']);
+            wpfp_die_or_go(wpfp_get_option('added'));
         }
     }
 }
@@ -87,8 +87,8 @@ function wpfp_remove_favorite($post_id = "") {
     if (wpfp_do_remove_favorite($post_id)) {
         // removed, now?
         do_action('wpfp_after_remove', $post_id);
-        if ($wpfp_options['statics']) wpfp_update_post_meta($post_id, -1);
-        if ($wpfp_options['removed'] == 'show add link') {
+        if (wpfp_get_option('statics')) wpfp_update_post_meta($post_id, -1);
+        if (wpfp_get_option('removed') == 'show add link') {
             if ($_REQUEST['page']==1):
                 $str = '';
             else:
@@ -96,7 +96,7 @@ function wpfp_remove_favorite($post_id = "") {
             endif;
             wpfp_die_or_go($str);
         } else {
-            wpfp_die_or_go($wpfp_options['removed']);
+            wpfp_die_or_go(wpfp_get_option('removed'));
         }
     }
     else return false;;
@@ -143,13 +143,13 @@ function wpfp_link( $return = 0, $action = "", $show_span = 1, $args = array() )
     $str .= wpfp_loading_img();
     $wpfp_options = wpfp_get_options();
     if ($action == "remove"):
-        $str .= wpfp_link_html($post_id, $wpfp_options['remove_favorite'], "remove");
+        $str .= wpfp_link_html($post_id, wpfp_get_option('remove_favorite'), "remove");
     elseif ($action == "add"):
-        $str .= wpfp_link_html($post_id, $wpfp_options['add_favorite'], "add");
+        $str .= wpfp_link_html($post_id, wpfp_get_option('add_favorite'), "add");
     elseif (wpfp_check_favorited($post_id)):
-        $str .= wpfp_link_html($post_id, $wpfp_options['remove_favorite'], "remove");
+        $str .= wpfp_link_html($post_id, wpfp_get_option('remove_favorite'), "remove");
     else:
-        $str .= wpfp_link_html($post_id, $wpfp_options['add_favorite'], "add");
+        $str .= wpfp_link_html($post_id, wpfp_get_option('add_favorite'), "add");
     endif;
     if ($show_span)
         $str .= "</span>";
@@ -437,7 +437,7 @@ function wpfp_remove_favorite_link($post_id) {
     if (wpfp_is_user_can_edit()) {
         $wpfp_options = wpfp_get_options();
         $class = 'wpfp-link remove-parent';
-        echo "[<a id='rem_$post_id' class='$class' href='?wpfpaction=remove&amp;page=1&amp;postid=". $post_id ."' title='".$wpfp_options['rem']."' rel='nofollow'>".$wpfp_options['rem']."</a>]";
+        echo "[<a id='rem_$post_id' class='$class' href='?wpfpaction=remove&amp;page=1&amp;postid=". $post_id ."' title='".wpfp_get_option('rem')."' rel='nofollow'>".wpfp_get_option('rem')."</a>]";
     }
 }
 function wpfp_clear_list_link() {
@@ -445,11 +445,16 @@ function wpfp_clear_list_link() {
         $wpfp_options = wpfp_get_options();
         echo wpfp_before_link_img();
         echo wpfp_loading_img();
-        echo "<a class='wpfp-link' href='?wpfpaction=clear' rel='nofollow'>". $wpfp_options['clear'] . "</a>";
+        echo "<a class='wpfp-link' href='?wpfpaction=clear' rel='nofollow'>". wpfp_get_option('clear') . "</a>";
     }
 }
 function wpfp_cookie_warning() {
     if (!is_user_logged_in() && !isset($_GET['user']) ):
-        echo "<p>".$wpfp_options['cookie_warning']."</p>";
+        echo "<p>".wpfp_get_option('cookie_warning')."</p>";
     endif;
+}
+
+function wpfp_get_option($opt) {
+    $wpfp_options = wpfp_get_options();
+    return htmlspecialchars_decode( stripslashes ( $wpfp_options[$opt] ) );   
 }
