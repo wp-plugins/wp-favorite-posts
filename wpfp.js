@@ -21,22 +21,10 @@ function wpfp_do_js( dhis, doAjax ) {
         jQuery.get(url, params, function(data) {
                 dhis.parent().html(data);
                 if(typeof wpfp_after_ajax == 'function') {
-                    wpfp_after_ajax( dhis ); // use this like a wp action.                    
+                    wpfp_after_ajax( dhis ); // use this like a wp action.
                 }
                 loadingImg.hide();
             }
         );
     }
-}
-
-function wpfp_after_ajax( dhis ) {
-    params = dhis.attr('href').replace('?', '');     
-    post_id = params.match(/postid=\d*/).toString();
-    post_id = post_id.match(/\d*$/);
-    jQuery.ajax({
-        data: ({'wpfp_get_users' : '1', 'post_id': post_id}),
-        success: function(msg) {
-            jQuery('#wpfp_users_' + post_id).html(msg);
-        }
-    });
 }
