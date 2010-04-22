@@ -325,11 +325,12 @@ function wpfp_list_most_favorited($limit=5) {
     if ($results) {
         echo "<ul>";
         foreach ($results as $o):
-            echo "<li>";
             $p = get_post($o->post_id);
-            echo "<a href='".get_permalink($o->post_id)."' title='". $p->post_title ."'>" . $p->post_title . "</a> ($o->meta_value)";
-            echo "</li>";
-            echo $post->post_id;
+            if ($p->post_status == 'publish') {
+                echo "<li>";
+                echo "<a href='".get_permalink($o->post_id)."' title='". $p->post_title ."'>" . $p->post_title . "</a> ($o->meta_value)";
+                echo "</li>";
+            }
         endforeach;
         echo "</ul>";
     }
