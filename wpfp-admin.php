@@ -32,14 +32,8 @@ if ( isset($_POST['submit']) ) {
 
 <div class="metabox-holder" id="poststuff">
 <div class="meta-box-sortables">
-
-    <!--The Pool-->
 <script>
-    jQuery(document).ready(function($) {
-                $('.postbox').children('h3, .handlediv').click(function(){
-                                $(this).siblings('.inside').toggle();
-                                        });
-    });
+jQuery(document).ready(function($) { $('.postbox').children('h3, .handlediv').click(function(){ $(this).siblings('.inside').toggle();});});
 </script>
 <div class="postbox">
     <div title="<?php _e("Click to open/close", "wp-favorite-posts"); ?>" class="handlediv">
