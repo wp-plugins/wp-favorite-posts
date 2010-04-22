@@ -3,6 +3,11 @@ WP Favorite Posts - ChangeLog
 http://wordpress.org/extend/plugins/wp-favorite-posts/
 http://nxsn.com
 ------------------
+Version 1.4.3.1
+-----------
+2010-04-23 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* Show only published posts on most favorited posts widget
+
 Version 1.4.3
 -----------
 2010-04-13 Hüseyin Berberoğlu <hberberoglu@gmail.com>
