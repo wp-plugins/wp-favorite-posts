@@ -2,7 +2,7 @@
     echo "<div class='wpfp-span'>";
     if (!empty($user)):
         if (!wpfp_is_user_favlist_public($user)):
-            echo "$user's tarif defteri.";
+            echo "$user's Favorite Posts.";
         else:
             echo "$user's list is not public.";
         endif;
