@@ -320,17 +320,17 @@ function wpfp_delete_post_meta($post_id) {
 }
 function wpfp_list_most_favorited($limit=5) {
     global $wpdb;
-    $query = "SELECT post_id, meta_value FROM $wpdb->postmeta WHERE meta_key='".WPFP_META_KEY."' AND meta_value > 0 ORDER BY CAST(meta_value AS DECIMAL) DESC LIMIT 0, $limit";
+    $query = "SELECT post_id, meta_value, post_status FROM $wpdb->postmeta";
+    $query .= " LEFT JOIN $wpdb->posts ON post_id=$wpdb->posts.ID";
+    $query .= " WHERE post_status='publish' AND meta_key='".WPFP_META_KEY."' AND meta_value > 0 ORDER BY ROUND(meta_value) DESC LIMIT 0, $limit";
     $results = $wpdb->get_results($query);
     if ($results) {
         echo "<ul>";
         foreach ($results as $o):
             $p = get_post($o->post_id);
-            if ($p->post_status == 'publish') {
-                echo "<li>";
-                echo "<a href='".get_permalink($o->post_id)."' title='". $p->post_title ."'>" . $p->post_title . "</a> ($o->meta_value)";
-                echo "</li>";
-            }
+            echo "<li>";
+            echo "<a href='".get_permalink($o->post_id)."' title='". $p->post_title ."'>" . $p->post_title . "</a> ($o->meta_value)";
+            echo "</li>";
         endforeach;
         echo "</ul>";
     }
