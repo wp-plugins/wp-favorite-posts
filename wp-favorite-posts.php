@@ -340,8 +340,6 @@ function wpfp_delete_post_meta($post_id) {
     return delete_post_meta($post_id, WPFP_META_KEY);
 }
 
-
-//---\\
 function wpfp_get_cookie() {
     return $_COOKIE[WPFP_COOKIE_KEY];
 }
