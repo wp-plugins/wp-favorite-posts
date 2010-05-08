@@ -201,9 +201,30 @@ function wpfp_list_favorite_posts( $args = array() ) {
     endif;
 }
 
+function wpfp_list_most_favorited($limit=5) {
+    global $wpdb;
+    $query = "SELECT post_id, meta_value, post_status FROM $wpdb->postmeta";
+    $query .= " LEFT JOIN $wpdb->posts ON post_id=$wpdb->posts.ID";
+    $query .= " WHERE post_status='publish' AND meta_key='".WPFP_META_KEY."' AND meta_value > 0 ORDER BY ROUND(meta_value) DESC LIMIT 0, $limit";
+    $results = $wpdb->get_results($query);
+    if ($results) {
+        echo "<ul>";
+        foreach ($results as $o):
+            $p = get_post($o->post_id);
+            echo "<li>";
+            echo "<a href='".get_permalink($o->post_id)."' title='". $p->post_title ."'>" . $p->post_title . "</a> ($o->meta_value)";
+            echo "</li>";
+        endforeach;
+        echo "</ul>";
+    }
+}
+
+include("wpfp-widgets.php");
+
 function wpfp_loading_img() {
     return "<img src='".WPFP_PATH."/img/loading.gif' alt='Loading' title='Loading' class='wpfp-hide wpfp-img' />";
 }
+
 function wpfp_before_link_img() {
     $options = wpfp_get_options();
     $option = $options['before_image'];
@@ -318,25 +339,7 @@ function wpfp_update_post_meta($post_id, $val) {
 function wpfp_delete_post_meta($post_id) {
     return delete_post_meta($post_id, WPFP_META_KEY);
 }
-function wpfp_list_most_favorited($limit=5) {
-    global $wpdb;
-    $query = "SELECT post_id, meta_value, post_status FROM $wpdb->postmeta";
-    $query .= " LEFT JOIN $wpdb->posts ON post_id=$wpdb->posts.ID";
-    $query .= " WHERE post_status='publish' AND meta_key='".WPFP_META_KEY."' AND meta_value > 0 ORDER BY ROUND(meta_value) DESC LIMIT 0, $limit";
-    $results = $wpdb->get_results($query);
-    if ($results) {
-        echo "<ul>";
-        foreach ($results as $o):
-            $p = get_post($o->post_id);
-            echo "<li>";
-            echo "<a href='".get_permalink($o->post_id)."' title='". $p->post_title ."'>" . $p->post_title . "</a> ($o->meta_value)";
-            echo "</li>";
-        endforeach;
-        echo "</ul>";
-    }
-}
 
-include("wpfp-widgets.php");
 
 //---\\
 function wpfp_get_cookie() {
