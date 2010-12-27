@@ -69,8 +69,8 @@ function wpfp_widget_init() {
     function wpfp_users_favorites_widget_control() {
         $options = wpfp_get_options();
         if (isset($_POST["wpfp-uf-widget-submit"])):
-            $options['uf_widget_title'] = strip_tags(stripslashes($_POST['uf_wpfp-title']));
-            $options['uf_widget_limit'] = strip_tags(stripslashes($_POST['uf_wpfp-limit']));
+            $options['uf_widget_title'] = strip_tags(stripslashes($_POST['wpfp-uf-title']));
+            $options['uf_widget_limit'] = strip_tags(stripslashes($_POST['wpfp-uf-limit']));
             update_option("wpfp_options", $options);
         endif;
         $uf_title = $options['uf_widget_title'];
@@ -78,12 +78,12 @@ function wpfp_widget_init() {
     ?>
         <p>
             <label for="wpfp-uf-title">
-                <?php _e('Title:'); ?> <input type="text" value="<?php echo $title; ?>" class="widefat" id="wpfp-uf-title" name="wpfp-uf-title" />
+                <?php _e('Title:'); ?> <input type="text" value="<?php echo $uf_title; ?>" class="widefat" id="wpfp-uf-title" name="wpfp-uf-title" />
             </label>
         </p>
         <p>
             <label for="wpfp-uf-limit">
-                <?php _e('Number of posts to show:'); ?> <input type="text" value="<?php echo $limit; ?>" style="width: 28px; text-align:center;" id="wpfp-uf-limit" name="wpfp-uf-limit" />
+                <?php _e('Number of posts to show:'); ?> <input type="text" value="<?php echo $uf_limit; ?>" style="width: 28px; text-align:center;" id="wpfp-uf-limit" name="wpfp-uf-limit" />
             </label>
         </p>
 
