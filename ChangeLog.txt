@@ -3,6 +3,10 @@ WP Favorite Posts - ChangeLog
 http://wordpress.org/extend/plugins/wp-favorite-posts/
 http://nxsn.com
 ------------------
+Version 1.5.2
+-----------
+2010-12-27 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* FIX: Change the user's favorites wigdet title bug fixed.
 
 Version 1.5.1
 -----------
