@@ -292,11 +292,17 @@ function wpfp_shortcode_func() {
 add_shortcode('wp-favorite-posts', 'wpfp_shortcode_func');
 
 
-function wpfp_add_js_script ( ) {
-    echo '<link type="text/css" rel="stylesheet" href="' . WPFP_PATH . '/wpfp.css" />' . "\n";
-    wp_enqueue_script( "wp-favroite-posts", WPFP_PATH . "/wpfp.js", array( 'jquery' ) );
+function wpfp_add_js_script() {
+	if (!wpfp_get_option('dont_load_js_file'))
+		wp_enqueue_script( "wp-favroite-posts", WPFP_PATH . "/wpfp.js", array( 'jquery' ) );
 }
 add_action('wp_print_scripts', 'wpfp_add_js_script');
+
+function wpfp_wp_print_styles() {
+	if (!wpfp_get_option('dont_load_css_file'))
+		echo "<link rel='stylesheet' id='wpfp-css' href='" . WPFP_PATH . "/wpfp.css' type='text/css' />" . "\n";
+}
+add_action('wp_print_styles', 'wpfp_wp_print_styles');
 
 function wpfp_init() {
     $wpfp_options = array();
@@ -315,6 +321,8 @@ function wpfp_init() {
     $wpfp_options['widget_limit'] = 5;
     $wpfp_options['before_image'] = 'star.png';
     $wpfp_options['custom_before_image'] = '';
+    $wpfp_options['dont_load_js_file'] = 0;
+    $wpfp_options['dont_load_css_file'] = 0;
     add_option('wpfp_options', $wpfp_options, 'Favorite Posts Options');
 }
 add_action('activate_wp-favorite-posts/wp-favorite-posts.php', 'wpfp_init');
@@ -417,5 +425,5 @@ function wpfp_cookie_warning() {
 
 function wpfp_get_option($opt) {
     $wpfp_options = wpfp_get_options();
-    return htmlspecialchars_decode( stripslashes ( $wpfp_options[$opt] ) );   
+    return htmlspecialchars_decode( stripslashes ( $wpfp_options[$opt] ) );
 }

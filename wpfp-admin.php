@@ -19,6 +19,8 @@ if ( isset($_POST['submit']) ) {
 	$wpfp_options['statics'] = htmlspecialchars($_POST['statics']);
 	$wpfp_options['before_image'] = htmlspecialchars($_POST['before_image']);
 	$wpfp_options['custom_before_image'] = htmlspecialchars($_POST['custom_before_image']);
+	$wpfp_options['dont_load_js_file'] = htmlspecialchars($_POST['dont_load_js_file']);
+	$wpfp_options['dont_load_css_file'] = htmlspecialchars($_POST['dont_load_css_file']);
 
 	update_option('wpfp_options', $wpfp_options);
 }
@@ -140,13 +142,17 @@ jQuery(document).ready(function($) { $('.postbox').children('h3, .handlediv').cl
                 <th><?php _e("Text for add link", "wp-favorite-posts") ?></th><td><input type="text" name="add_favorite" value="<?php echo stripslashes($wpfp_options['add_favorite']); ?>" /></td>
             </tr>
             <tr>
-                <th><?php _e("Text for added", "wp-favorite-posts") ?></th><td><input type="checkbox"  <?php if ($wpfp_options['added'] == 'show remove link') echo "checked='cheked'"; ?> name="show_remove_link" onclick="jQuery('#added').val(''); jQuery('#added').toggle();" value="show_remove_link" />Show remove link<br /><input id="added" type="text" name="added" <?php if ($wpfp_options['added'] == 'show remove link') echo "style='display:none;'"; ?> value="<?php echo stripslashes($wpfp_options['added']); ?>" /></td>
+                <th><?php _e("Text for added", "wp-favorite-posts") ?></th><td><input type="checkbox"  <?php if ($wpfp_options['added'] == 'show remove link') echo "checked='checked'"; ?> name="show_remove_link" onclick="jQuery('#added').val(''); jQuery('#added').toggle();" value="show_remove_link" id="show_remove_link" /> <label for="show_remove_link">Show remove link</label>
+				<br /><input id="added" type="text" name="added" <?php if ($wpfp_options['added'] == 'show remove link') echo "style='display:none;'"; ?> value="<?php echo stripslashes($wpfp_options['added']); ?>" /></td>
             </tr>
             <tr>
                 <th><?php _e("Text for remove link", "wp-favorite-posts") ?></th><td><input type="text" name="remove_favorite" value="<?php echo stripslashes($wpfp_options['remove_favorite']); ?>" /></td>
             </tr>
             <tr>
-                <th><?php _e("Text for removed", "wp-favorite-posts") ?></th><td><input type="checkbox" <?php if ($wpfp_options['removed'] == 'show add link') echo "checked='checked'"; ?> name="show_add_link" onclick="jQuery('#removed').val(''); jQuery('#removed').toggle();" value='show_add_link' />Show add link<br /><input id="removed" type="text" name="removed" <?php if ($wpfp_options['removed'] == 'show add link') echo "style='display:none;'"; ?> value="<?php echo stripslashes($wpfp_options['removed']); ?>" /></td>
+                <th><?php _e("Text for removed", "wp-favorite-posts") ?></th>
+				<td><input type="checkbox" <?php if ($wpfp_options['removed'] == 'show add link') echo "checked='checked'"; ?> name="show_add_link" id="show_add_link" onclick="jQuery('#removed').val(''); jQuery('#removed').toggle();" value='show_add_link' /> <label for="show_add_link">Show add link</label>
+				<br />
+				<input id="removed" type="text" name="removed" <?php if ($wpfp_options['removed'] == 'show add link') echo "style='display:none;'"; ?> value="<?php echo stripslashes($wpfp_options['removed']); ?>" /></td>
             </tr>
             <tr>
                 <th><?php _e("Text for clear link", "wp-favorite-posts") ?></th><td><input type="text" name="clear" value="<?php echo stripslashes($wpfp_options['clear']); ?>" /></td>
@@ -169,6 +175,28 @@ jQuery(document).ready(function($) { $('.postbox').children('h3, .handlediv').cl
 
             <tr>
                 <th></th>
+                <td>
+                    <input type="submit" name="submit" class="button" value="<?php _e('Update options &raquo;'); ?>" />
+                </td>
+            </tr>
+
+        </table>
+    </div>
+</div>
+<div class="postbox">
+    <div title="<?php _e("Click to open/close", "wp-favorite-posts"); ?>" class="handlediv">
+      <br>
+    </div>
+    <h3 class="hndle"><span><?php _e('Advanced Settings', 'wp-favorite-posts'); ?></span></h3>
+    <div class="inside" style="display: block;">
+        <table class="form-table">
+            <tr>
+                <td><input type="checkbox" value="1" <?php if ($wpfp_options['dont_load_js_file'] == '1') echo "checked='checked'"; ?> name="dont_load_js_file" id="dont_load_js_file" /> <label for="dont_load_js_file">Don't load js file</label></td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" value="1" <?php if ($wpfp_options['dont_load_css_file'] == '1') echo "checked='checked'"; ?> name="dont_load_css_file" id="dont_load_css_file" /> <label for="dont_load_css_file">Don't load css file</label></td>
+            </tr>			
+            <tr>
                 <td>
                     <input type="submit" name="submit" class="button" value="<?php _e('Update options &raquo;'); ?>" />
                 </td>
