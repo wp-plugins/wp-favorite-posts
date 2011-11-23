@@ -3,6 +3,12 @@ WP Favorite Posts - ChangeLog
 http://wordpress.org/extend/plugins/wp-favorite-posts/
 http://nxsn.com
 ------------------
+Version 1.5.3
+-----------
+2011-11-23 Hüseyin Berberoğlu <hberberoglu@gmail.com>
+	* NEW FEATURE: Added don't load js/css file option. If you don't 
+	want to load wp favorite post's js/css file, use these options. 
+	
 Version 1.5.2
 -----------
 2010-12-27 Hüseyin Berberoğlu <hberberoglu@gmail.com>
