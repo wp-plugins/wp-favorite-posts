@@ -120,16 +120,17 @@ function wpfp_add_to_usermeta($post_id) {
 }
 
 function wpfp_check_favorited($cid) {
-    if (is_user_logged_in()):
+    if (is_user_logged_in()) {
         $favorite_post_ids = wpfp_get_user_meta();
         if ($favorite_post_ids)
             foreach ($favorite_post_ids as $fpost_id)
                 if ($fpost_id == $cid) return true;
-    endif;
-    if (wpfp_get_cookie()):
-        foreach (wpfp_get_cookie() as $fpost_id => $val)
-            if ($fpost_id == $cid) return true;
-    endif;
+	} else {
+	    if (wpfp_get_cookie()):
+	        foreach (wpfp_get_cookie() as $fpost_id => $val)
+	            if ($fpost_id == $cid) return true;
+	    endif;
+	}
     return false;
 }
 
