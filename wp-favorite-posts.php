@@ -172,13 +172,13 @@ function wpfp_get_users_favorites($user = "") {
     # collect favorites from cookie and if user is logged in from database.
     if (is_user_logged_in()):
         $favorite_post_ids = wpfp_get_user_meta();
-    endif;
-
-    if (wpfp_get_cookie()):
-        foreach (wpfp_get_cookie() as $post_id => $post_title) {
-            array_push($favorite_post_ids, $post_id);
-        }
-    endif;
+	else:
+	    if (wpfp_get_cookie()):
+	        foreach (wpfp_get_cookie() as $post_id => $post_title) {
+	            array_push($favorite_post_ids, $post_id);
+	        }
+	    endif;
+	endif;
     return $favorite_post_ids;
 }
 
