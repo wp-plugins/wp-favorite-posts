@@ -1,7 +1,9 @@
 <?php
 echo "<ul>";
 if ($favorite_post_ids):
+	$c = 0;
     foreach ($favorite_post_ids as $post_id) {
+    	if ($c++ == $limit) break;
         $p = get_post($post_id);
         echo "<li>";
         echo "<a href='".get_permalink($post_id)."' title='". $p->post_title ."'>" . $p->post_title . "</a> ";
