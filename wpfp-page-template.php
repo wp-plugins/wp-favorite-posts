@@ -14,6 +14,7 @@
 
     echo "<ul>";
     if ($favorite_post_ids):
+		$favorite_post_ids = array_reverse($favorite_post_ids);
         foreach ($favorite_post_ids as $post_id) {
             $p = get_post($post_id);
             echo "<li>";
