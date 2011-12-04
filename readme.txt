@@ -4,8 +4,8 @@ Donate link: http://nxsn.com.com/my-projects/wp-favorite-posts-plugin
 Tags: favorite posts, favorite, favourite, posts, favorites,
 wp-favorite-posts, reading list, post list, post lists, lists
 Requires at least: 2.0.2
-Tested up to: 3.0.3
-Stable tag: 1.5.5
+Tested up to: 3.2.1
+Stable tag: 1.5.6
 
 Allows visitors to add favorite posts. This plugin use cookies for saving data so
 unregistered users can favorite a post.
@@ -50,6 +50,13 @@ text into content section. This page will contain users favorite posts.
 3. Advanced Settings
 
 == Changelog ==
+= 1.5.6 =
+2011-12-04
+	* BUGFIX: Fixed user's favorites widget post limit bug, it works from now.
+	* NEW FEATURE: Added "Reset Statistic Data" option to admin page. You can remove all statistic data by clicking this link.
+	* NEW FEATURE: Added sorting, last added posts will be shown first.
+	* FIX: Changed WP_PLUGIN_URL --> plugins_url()
+
 = 1.5.5 =
 2011-11-23
 	* BUGFIX: related with 1.5.4
