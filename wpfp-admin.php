@@ -24,6 +24,21 @@ if ( isset($_POST['submit']) ) {
 
 	update_option('wpfp_options', $wpfp_options);
 }
+if ( isset($_GET['action'] ) ) {
+	if ($_GET['action'] == 'reset-statics') {
+		global $wpdb;
+		    $results = $wpdb->get_results($query);
+		$query = "DELETE FROM $wpdb->postmeta WHERE meta_key = 'wpfp_favorites'";
+		
+		$message = '<div class="updated below-h2" id="message"><p>';
+		if ($wpdb->query($query)) {
+			$message .= "All statistic data about wp favorite posts plugin have been <strong>deleted</strong>.";
+		} else {
+			$message .= "Something gone <strong>wrong</strong>. Data couldn't delete. Maybe thre isn't any data to delete?";
+		}	
+		$message .= '</p></div>';
+	}
+}
 ?>
 <?php if ( !empty($_POST ) ) : ?>
 <div id="message" class="updated fade"><p><strong><?php _e('Options saved.') ?></strong></p></div>
@@ -35,7 +50,12 @@ if ( isset($_POST['submit']) ) {
 <div class="metabox-holder" id="poststuff">
 <div class="meta-box-sortables">
 <script>
-jQuery(document).ready(function($) { $('.postbox').children('h3, .handlediv').click(function(){ $(this).siblings('.inside').toggle();});});
+jQuery(document).ready(function($) {
+	$('.postbox').children('h3, .handlediv').click(function(){ $(this).siblings('.inside').toggle();});
+	$('#wpfp-reset-statics').click(function(){
+		return confirm('All statistic data will be deleted, are you sure ?');
+		});
+});
 </script>
 <div class="postbox">
     <div title="<?php _e("Click to open/close", "wp-favorite-posts"); ?>" class="handlediv">
@@ -55,6 +75,7 @@ jQuery(document).ready(function($) { $('.postbox').children('h3, .handlediv').cl
         <div style="clear:both;"></div>
     </div>
 </div>
+<?php echo $message; ?>
 <form action="" method="post">
 
 
@@ -106,6 +127,15 @@ jQuery(document).ready(function($) { $('.postbox').children('h3, .handlediv').cl
                 <td>
                     <label for="stats-enabled"><input type="radio" name="statics" id="stats-enabled" value="1" <?php if ($wpfp_options['statics']) echo "checked='checked'" ?> /> Enabled</label>
                     <label for="stats-disabled"><input type="radio" name="statics" id="stats-disabled" value="0" <?php if (!$wpfp_options['statics']) echo "checked='checked'" ?> /> Disabled</label>
+                </td>
+            </tr>
+        	<tr><td></td>
+                <td>
+                	<div class="submitbox">
+	                	<div id="delete-action">
+						<a href="?page=wp-favorite-posts&amp;action=reset-statics" id="wpfp-reset-statics" class="submitdelete deletion">Reset Statistic Data</a>
+						</div>
+					</div>
                 </td>
             </tr>
             <tr>
@@ -201,7 +231,6 @@ jQuery(document).ready(function($) { $('.postbox').children('h3, .handlediv').cl
                     <input type="submit" name="submit" class="button" value="<?php _e('Update options &raquo;'); ?>" />
                 </td>
             </tr>
-
         </table>
     </div>
 </div>
@@ -211,7 +240,7 @@ jQuery(document).ready(function($) { $('.postbox').children('h3, .handlediv').cl
     </div>
     <h3 class="hndle"><span><?php _e('Help', 'wp-favorite-posts'); ?></span></h3>
     <div class="inside" style="display: block;">
-        If you need help you can go <a href="http://nxsn.com/my-projects/wp-favorite-posts-plugin/" target="_blank">plugin's page</a>.
+        If you need help about WP Favorite Posts plugin you can go <a href="http://wordpress.org/tags/wp-favorite-posts" target="_blank">plugin's wordpress support page</a>. I or someone else will help you.
     </div>
 </div>
 </form>

@@ -28,7 +28,7 @@ Author URI: http://nxsn.com
 
 */
 
-define('WPFP_PATH', WP_PLUGIN_URL . '/wp-favorite-posts');
+define('WPFP_PATH', plugins_url() . '/wp-favorite-posts');
 define('WPFP_META_KEY', "wpfp_favorites");
 define('WPFP_USER_OPTION_KEY', "wpfp_useroptions");
 define('WPFP_COOKIE_KEY', "wp-favorite-posts");
@@ -195,8 +195,12 @@ function wpfp_list_favorite_posts( $args = array() ) {
         $favorite_post_ids = wpfp_get_users_favorites();
     endif;
 
-    if (@file_exists(TEMPLATEPATH.'/wpfp-page-template.php')):
-        include(TEMPLATEPATH.'/wpfp-page-template.php');
+	if ( @file_exists(TEMPLATEPATH.'/wpfp-page-template.php') || @file_exists(STYLESHEETPATH.'/wpfp-page-template.php') ):
+        if(@file_exists(TEMPLATEPATH.'/wpfp-page-template.php')) :
+            include(TEMPLATEPATH.'/wpfp-page-template.php');
+        else :
+            include(STYLESHEETPATH.'/wpfp-page-template.php');
+        endif;
     else:
         include("wpfp-page-template.php");
     endif;
@@ -341,7 +345,12 @@ function wpfp_update_user_meta($arr) {
 }
 
 function wpfp_update_post_meta($post_id, $val) {
-    $val = wpfp_get_post_meta($post_id) + $val;
+	$oldval = wpfp_get_post_meta($post_id);
+	if ($val == -1 && $oldval == 0) {
+    	$val = 0;
+	} else {
+		$val = $oldval + $val;
+	}
     return add_post_meta($post_id, WPFP_META_KEY, $val, true) or update_post_meta($post_id, WPFP_META_KEY, $val);
 }
 
