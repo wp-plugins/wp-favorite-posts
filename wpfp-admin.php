@@ -21,6 +21,8 @@ if ( isset($_POST['submit']) ) {
 	$wpfp_options['custom_before_image'] = htmlspecialchars($_POST['custom_before_image']);
 	$wpfp_options['dont_load_js_file'] = htmlspecialchars($_POST['dont_load_js_file']);
 	$wpfp_options['dont_load_css_file'] = htmlspecialchars($_POST['dont_load_css_file']);
+	$wpfp_options['autoshow'] = htmlspecialchars($_POST['autoshow']);
+	$wpfp_options['post_per_page'] = htmlspecialchars($_POST['post_per_page']);
 
 	update_option('wpfp_options', $wpfp_options);
 }
@@ -92,6 +94,18 @@ jQuery(document).ready(function($) {
             </tr>
 
             <tr>
+                <th><?php _e("Auto show favorite link", "wp-favorite-posts") ?></th>
+                <td>
+                    <select name="autoshow">
+                        <option value="custom" <?php if ($wpfp_options['autoshow'] == 'custom') echo "selected='selected'" ?>>Custom</option>
+                        <option value="after" <?php if ($wpfp_options['autoshow'] == 'after') echo "selected='selected'" ?>>After post</option>
+                        <option value="before" <?php if ($wpfp_options['autoshow'] == 'before') echo "selected='selected'" ?>>Before post</option>
+                    </select>
+                    (Custom: insert <strong>&lt;?php wpfp_link() ?&gt;</strong> wherever you want to show favorite link)
+                </td>
+            </tr>
+
+            <tr>
                 <th><?php _e("Before Link Image", "wp-favorite-posts") ?></th>
                 <td>
                     <p>
@@ -122,6 +136,12 @@ jQuery(document).ready(function($) {
                 </td>
             </tr>
 
+            <tr>
+                <th><?php _e("Favorite post per page", "wp-favorite-posts") ?></th>
+                <td>
+                    <input type="text" name="post_per_page" size="2" value="<?php echo stripslashes($wpfp_options['post_per_page']); ?>" /> * This only works with default favorite post list page (wpfp-page-template.php).
+                </td>
+            </tr>
             <tr>
                 <th><?php _e("Most favorited posts statics", "wp-favorite-posts") ?>*</th>
                 <td>
@@ -155,9 +175,6 @@ jQuery(document).ready(function($) {
 
     </div>
 </div>
-
-
-
 
 <div class="postbox">
     <div title="" class="handlediv">
