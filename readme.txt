@@ -5,7 +5,7 @@ Tags: favorite posts, favorite, favourite, posts, favorites,
 wp-favorite-posts, reading list, post list, post lists, lists
 Requires at least: 2.0.2
 Tested up to: 3.5
-Stable tag: 1.5.7.1
+Stable tag: 1.5.8
 
 Allows visitors to add favorite posts. This plugin use cookies for saving data so
 unregistered users can favorite a post.
@@ -28,7 +28,9 @@ tag for listing most favorited posts;
 If you use WP Super Cache you must add page (which you show favorites) URI to "Accepted Filenames &
 Rejected URIs".
 
-See [more details about plugin](http://nxsn.com/projects/wp-favorite-posts/)
+If you need support [create a topic on support forum](http://wordpress.org/support/plugin/wp-favorite-posts)
+
+For thank me [go here](http://nxsn.com/projects/wp-favorite-posts/) or [make a donation](http://nxsn.com/donate/)
 
 == Installation ==
 
@@ -49,6 +51,9 @@ text into content section. This page will contain users favorite posts.
 3. Advanced Settings
 
 == Changelog ==
+= 1.5.8 (2012-12-31) =
+* BUGFIX: fixed fake favorite possiblity bug. Thanks to Marian (http://nxsn.com/projects/wp-favorite-posts/comment-page-11/#comment-16505)
+
 = 1.5.7 (2012-12-29) =
 * Automatic show option added to settings screen. You can configure to show "add/remove favorite" link before or after post content.
 * Pagination added to default user's favorite posts template. Also you can configure favorite post per page number from settings screen.
@@ -78,13 +83,11 @@ text into content section. This page will contain users favorite posts.
 = 1.4.3.2 (2010-04-23) =
 * Show only published posts on most favorited posts widget
 
-= 1.4.3 =
-2010-04-13
+= 1.4.3 (2010-04-13) =
 * Admin can write html codes to label settings (on admin page)
 * Added "wpfp_link_html" and "wpfp_remove_favorite_link" filters.
 
-= 1.4.3 =
-2010-04-09
+= 1.4.3 (2010-04-09) =
 * Fix: same remove link for all posts on index
 * better wpfp.js: remove li which on favorites page.
 
@@ -138,10 +141,10 @@ Similary You can show add link when someone remove a favorite.
 You can show favorite link only in preferred posts with writing
 [wpfp-link] to the post content.
 
-= 1.1.6 (2009-03-05)=
+= 1.1.6 (2009-03-05) =
 * Fixed ajax problem.
 
-= 1.1.5 (2009-03-02)=
+= 1.1.5 (2009-03-02) =
 * Added rel="nofollow" to links.
 * Favorite posts title language problem solved.
 * ajax.js file renamed to wpfp.js
@@ -154,22 +157,22 @@ You can show favorite link only in preferred posts with writing
 * Added "buy me a beer" section to admin page.
 * Added favorite statistic feature.
 
-= 1.2 (2009-04-26)=
+= 1.2 (2009-04-26) =
 * Added database integration. 
 - If a user logged in then favorites data will save to database instead of cookies.
 - If user not logged in data will save to cookies.
 * Added "only registered users can favorite" option.
 
-= 1.1.7 (2009-03-10)=
+= 1.1.7 (2009-03-10) =
 * Fixed duplicate loading image problem
 * Added [wpfp-link] feature;
 You can show favorite link only in preferred posts with writing
 [wpfp-link] to the post content.
 
-= 1.1.6 (2009-03-05)=
+= 1.1.6 (2009-03-05) =
 * Fixed ajax problem.
 
-= 1.1.5 (2009-03-02)=
+= 1.1.5 (2009-03-02) =
 * Added rel="nofollow" to links.
 * Favorite posts title language problem solved.
 * ajax.js file renamed to wpfp.js
