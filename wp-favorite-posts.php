@@ -3,7 +3,7 @@
 Plugin Name: WP Favorite Posts
 Plugin URI: http://nxsn.com/my-projects/wp-favorite-posts-plugin/
 Description: Allows users to add favorite posts. This plugin use cookies for saving data so unregistered users can favorite a post. Put <code>&lt;?php wpfp_link(); ?&gt;</code> where ever you want on a single post. Then create a page which includes that text : <code>[wp-favorite-posts]</code> That's it!
-Version: 1.5.8.2
+Version: 1.5.8.4
 Author: Huseyin Berberoglu
 Author URI: http://nxsn.com
 
@@ -256,6 +256,7 @@ function wpfp_clear_favorites() {
     }
     return true;
 }
+
 function wpfp_do_remove_favorite($post_id) {
     if (!wpfp_check_favorited($post_id))
         return true;
@@ -277,11 +278,10 @@ function wpfp_content_filter($content) {
             $content = str_replace('{{wp-favorite-posts}}', wpfp_list_favorite_posts(), $content);
         }
     endif;
-    //if (is_single()):
-        if (strpos($content,'[wpfp-link]')!== false) {
-            $content = str_replace('[wpfp-link]', wpfp_link(1), $content);
-        }
-    //endif;
+
+    if (strpos($content,'[wpfp-link]')!== false) {
+        $content = str_replace('[wpfp-link]', wpfp_link(1), $content);
+    }
 
     if (is_single()) {
         if (wpfp_get_option('autoshow') == 'before') {
@@ -293,6 +293,7 @@ function wpfp_content_filter($content) {
     return $content;
 }
 add_filter('the_content','wpfp_content_filter');
+
 function wpfp_shortcode_func() {
     wpfp_list_favorite_posts();
 }
@@ -326,6 +327,7 @@ function wpfp_init() {
     $wpfp_options['statics'] = 1;
     $wpfp_options['widget_title'] = '';
     $wpfp_options['widget_limit'] = 5;
+    $wpfp_options['uf_widget_limit'] = 5;
     $wpfp_options['before_image'] = 'star.png';
     $wpfp_options['custom_before_image'] = '';
     $wpfp_options['dont_load_js_file'] = 0;
@@ -339,7 +341,7 @@ function wpfp_config() { include('wpfp-admin.php'); }
 
 function wpfp_config_page() {
     if ( function_exists('add_submenu_page') )
-        add_options_page(__('Favorite Posts'), __('Favorite Posts'), 'manage_options', 'wp-favorite-posts', 'wpfp_config');
+        add_options_page(__('WP Favorite Posts'), __('WP Favorite Posts'), 'manage_options', 'wp-favorite-posts', 'wpfp_config');
 }
 add_action('admin_menu', 'wpfp_config_page');
 
@@ -377,11 +379,11 @@ function wpfp_get_user_id() {
 
 function wpfp_get_user_meta($user = "") {
     if (!empty($user)):
-        $userdata = get_userdatabylogin($user);
+        $userdata = get_user_by( 'login', $user );
         $user_id = $userdata->ID;
-        return get_usermeta($user_id, WPFP_META_KEY);
+        return get_user_meta($user_id, WPFP_META_KEY, true);
     else:
-        return get_usermeta(wpfp_get_user_id(), WPFP_META_KEY);
+        return get_user_meta(wpfp_get_user_id(), WPFP_META_KEY, true);
     endif;
 }
 
@@ -405,15 +407,17 @@ function wpfp_is_user_favlist_public($user) {
 }
 
 function wpfp_get_user_options($user) {
-    $userdata = get_userdatabylogin($user);
+    $userdata = get_user_by( 'login', $user );
     $user_id = $userdata->ID;
-    return get_usermeta($user_id, WPFP_USER_OPTION_KEY);
+    return get_user_meta($user_id, WPFP_USER_OPTION_KEY, true);
 }
+
 function wpfp_is_user_can_edit() {
     if ($_REQUEST['user'])
         return false;
     return true;
 }
+
 function wpfp_remove_favorite_link($post_id) {
     if (wpfp_is_user_can_edit()) {
         $wpfp_options = wpfp_get_options();
@@ -423,6 +427,7 @@ function wpfp_remove_favorite_link($post_id) {
         echo $link;
     }
 }
+
 function wpfp_clear_list_link() {
     if (wpfp_is_user_can_edit()) {
         $wpfp_options = wpfp_get_options();
@@ -431,6 +436,7 @@ function wpfp_clear_list_link() {
         echo "<a class='wpfp-link' href='?wpfpaction=clear' rel='nofollow'>". wpfp_get_option('clear') . "</a>";
     }
 }
+
 function wpfp_cookie_warning() {
     if (!is_user_logged_in() && !isset($_GET['user']) ):
         echo "<p>".wpfp_get_option('cookie_warning')."</p>";

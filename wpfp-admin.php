@@ -46,8 +46,7 @@ if ( isset($_GET['action'] ) ) {
 <div id="message" class="updated fade"><p><strong><?php _e('Options saved.') ?></strong></p></div>
 <?php endif; ?>
 <div class="wrap">
-<?php screen_icon(); ?>
-<h2><?php _e('Favorite Posts Configuration', 'wp-favorite-posts'); ?></h2>
+<h2><?php _e('WP Favorite Posts Configuration', 'wp-favorite-posts'); ?></h2>
 
 <div class="metabox-holder" id="poststuff">
 <div class="meta-box-sortables">
@@ -168,7 +167,7 @@ jQuery(document).ready(function($) {
             <tr>
                 <th></th>
                 <td>
-                    <input type="submit" name="submit" class="button" value="<?php _e('Update options &raquo;'); ?>" />
+                    <input type="submit" name="submit" class="button button-primary" value="<?php _e('Update options &raquo;'); ?>" />
                 </td>
             </tr>
         </table>
@@ -223,7 +222,7 @@ jQuery(document).ready(function($) {
             <tr>
                 <th></th>
                 <td>
-                    <input type="submit" name="submit" class="button" value="<?php _e('Update options &raquo;'); ?>" />
+                    <input type="submit" name="submit" class="button button-primary" value="<?php _e('Update options &raquo;'); ?>" />
                 </td>
             </tr>
 
@@ -245,7 +244,7 @@ jQuery(document).ready(function($) {
             </tr>			
             <tr>
                 <td>
-                    <input type="submit" name="submit" class="button" value="<?php _e('Update options &raquo;'); ?>" />
+                    <input type="submit" name="submit" class="button button-primary" value="<?php _e('Update options &raquo;'); ?>" />
                 </td>
             </tr>
         </table>
